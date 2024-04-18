@@ -138,8 +138,14 @@ def identify_smus():
             # We couldn't connect to the device, move onto the next one
             continue
 
+        # Flush and read the identity
+        device.read_all()
+        device.write(b"*IDN?")
+        identity = device.read_all()
+
         # Ask the device for its identity
-        if b"KEITHLEY INSTRUMENTS INC.,MODEL 2400,1212298,C30   Mar 17 2006 09:29:29/A02  /K/J" in query(device, b"*IDN?"):
+        # TODO: Figure out what the identity of the source meters looks like and apply appropriate check
+        if b"KEITHLEY INSTRUMENTS INC.,MODEL 2400,1212298,C30   Mar 17 2006 09:29:29/A02  /K/J" in identity:
             smu_connections.append(device)
 
     # Return all connected SMUs
