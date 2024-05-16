@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QMainWindow
 
-from IVPlot import IVPlot
 from ui_main_window import Ui_MainWindow
 
 
