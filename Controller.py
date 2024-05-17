@@ -1,9 +1,12 @@
 from typing import List
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtWidgets import QComboBox, QDoubleSpinBox
+import pandas as pd
 
 from MainWindow import MainWindow
-from Measurement import DatastreamMeasurementWorker, DatastreamMode, DatastreamParameters, SweepParameters
+from Measurement import DatastreamMeasurementWorker, DatastreamMode, DatastreamParameters, MeasurementPoint, SweepMeasurementWorker, SweepParameters
+from Plot import Plot
+from PlotParamsDialog import PlotParam, PlotParamsDialog
 from SourceMeter import ConnectSMUWorker, Source, SourceMeter
 
 
@@ -11,42 +14,67 @@ class Controller(QObject):
 
     sourcemeters: List[SourceMeter]
     main_window: MainWindow
+    
+    ms_measurement: pd.DataFrame
+    ds_measurement: pd.DataFrame
+
+    ms_plot_param_x: PlotParam
+    ms_plot_param_y: PlotParam
+    ds_plot_param_x: PlotParam
+    ds_plot_param_y: PlotParam
+    
 
     def __init__(self):
         super().__init__()
 
         # Initialize fields
         self.sourcemeters = []
+        self.ms_measurement = initialize_data()
+        self.ds_measurement = initialize_data()
+        self.ms_plot_param_x = PlotParam.smu_1_voltage
+        self.ms_plot_param_y = PlotParam.smu_1_current
+        self.ds_plot_param_x = PlotParam.smu_1_voltage
+        self.ds_plot_param_y = PlotParam.smu_1_current
 
         # Create the user interface
         self.main_window = MainWindow()
         self.main_window.show()
+        
+        # Setup the plotes
+        self.main_window.setup_plots(self.ms_measurement, self.ds_measurement)
 
-        # SMU Connection Tab
+        # === SMU Connection Tab ===
         self.main_window.smu_search.clicked.connect(self.smu_search_clicked)
         self.main_window.smu_connection_list.itemSelectionChanged.connect(self.smu_connection_selection_changed)
         self.main_window.smu_disconnect.clicked.connect(self.smu_disconnect_clicked)
         self.main_window.smu_identify.clicked.connect(self.smu_identify_clicked)
 
-        # Sweep tab
+        # === Sweep tab ===
         # self.main_window.sm_measurement_run.clicked.connect(self.sm_measurement_run_clicked)
         # self.main_window.sm_quick_measurement_run.clicked.connect(self.sm_quick_measurement_run_clicked)
+        
         self.main_window.sm_voltage_1.clicked.connect(self.sm_update_sources)
         self.main_window.sm_current_1.clicked.connect(self.sm_update_sources)
         self.main_window.sm_sweep_1.clicked.connect(self.sm_update_sources)
         self.main_window.sm_voltage_2.clicked.connect(self.sm_update_sources)
         self.main_window.sm_current_2.clicked.connect(self.sm_update_sources)
         self.main_window.sm_sweep_2.clicked.connect(self.sm_update_sources)
+        
+        self.main_window.sm_plot_settings.clicked.connect(self.main_window.sm_plot.update_plot_parameters)
 
-        # Datastream tab
+        # === Datastream tab ===
         self.main_window.ds_stream.clicked.connect(self.ds_stream_clicked)
+        
         self.main_window.ds_voltage_1.clicked.connect(self.ds_update_sources)
         self.main_window.ds_current_1.clicked.connect(self.ds_update_sources)
         self.main_window.ds_voltage_2.clicked.connect(self.ds_update_sources)
         self.main_window.ds_current_2.clicked.connect(self.ds_update_sources)
+        
         self.main_window.ds_continuous.clicked.connect(self.ds_update_mode)
         self.main_window.ds_fixed_duration.clicked.connect(self.ds_update_mode)
         self.main_window.ds_fixed_num.clicked.connect(self.ds_update_mode)
+        
+        self.main_window.ds_plot_settings.clicked.connect(self.main_window.ds_plot.update_plot_parameters)
 
         # Update source inputs to reflect real values
         self.sm_update_sources()
@@ -173,16 +201,10 @@ class Controller(QObject):
         # Identify which SMU will be used as the sweep, and which will be used as the constant
         # as well as what source mode each is in
         if self.main_window.sm_sweep_1.isChecked():
-            sweep_smu = self.get_smu_from_serial(self.main_window.smu_select_sm_1.currentText(), allow_simulated=True)
             sweep_souce = self.sm_get_smu_1_source()
-
-            constant_smu = self.get_smu_from_serial(self.main_window.smu_select_sm_2.currentText(), allow_simulated=True)
             constant_source = self.sm_get_smu_2_source()
         else:
-            sweep_smu = self.get_smu_from_serial(self.main_window.smu_select_sm_2.currentText(), allow_simulated=True)
             sweep_souce = self.sm_get_smu_2_source()
-
-            constant_smu = self.get_smu_from_serial(self.main_window.smu_select_sm_1.currentText(), allow_simulated=True)
             constant_source = self.sm_get_smu_1_source()
 
         sweep_start = self.main_window.sm_sweep_start.value()
@@ -253,8 +275,25 @@ class Controller(QObject):
     def sm_get_smu_2_source(self):
         return Source.VOLTAGE if self.main_window.sm_voltage_2.isChecked() else Source.CURRENT
 
-    Slot()
+    def ds_get_smu_1_source(self):
+        return Source.VOLTAGE if self.main_window.ds_voltage_1.isChecked() else Source.CURRENT
 
+    def ds_get_smu_2_source(self):
+        return Source.VOLTAGE if self.main_window.ds_voltage_2.isChecked() else Source.CURRENT
+
+    def ds_get_smu_1(self):
+        return self.get_smu_from_serial(self.main_window.smu_select_ds_1.currentText(), True)
+
+    def ds_get_smu_2(self):
+        return self.get_smu_from_serial(self.main_window.smu_select_ds_2.currentText(), True)
+
+    def sm_get_smu_1(self):
+        return self.get_smu_from_serial(self.main_window.smu_select_sm_1.currentText(), True)
+
+    def sm_get_smu_2(self):
+        return self.get_smu_from_serial(self.main_window.smu_select_sm_2.currentText(), True)
+    
+    @Slot()
     def sm_update_sources(self):
 
         if self.main_window.sm_sweep_1.isChecked():
@@ -273,20 +312,7 @@ class Controller(QObject):
         set_input_mode(self.main_window.sm_constant_output, False, constant_source)
         set_input_mode(self.main_window.sm_constant_compliance, False, Source.CURRENT if constant_source is Source.VOLTAGE else Source.VOLTAGE)
 
-    def ds_get_smu_1_source(self):
-        return Source.VOLTAGE if self.main_window.ds_voltage_1.isChecked() else Source.CURRENT
-
-    def ds_get_smu_2_source(self):
-        return Source.VOLTAGE if self.main_window.ds_voltage_2.isChecked() else Source.CURRENT
-
-    def ds_get_smu_1(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_ds_1.currentText(), True)
-
-    def ds_get_smu_2(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_ds_2.currentText(), True)
-
-    Slot()
-
+    @Slot()
     def ds_update_sources(self):
         set_input_mode(self.main_window.ds_output_1, False, self.ds_get_smu_1_source())
         set_input_mode(self.main_window.ds_compliance_1, False, Source.CURRENT if self.ds_get_smu_1_source() is Source.VOLTAGE else Source.VOLTAGE)
@@ -294,8 +320,7 @@ class Controller(QObject):
         set_input_mode(self.main_window.ds_output_2, False, self.ds_get_smu_2_source())
         set_input_mode(self.main_window.ds_compliance_2, False, Source.CURRENT if self.ds_get_smu_2_source() is Source.VOLTAGE else Source.VOLTAGE)
 
-    Slot()
-
+    @Slot()
     def ds_update_mode(self):
         self.main_window.ds_num_measurements.setDisabled(True)
         self.main_window.ds_num_measurements_label.setDisabled(True)
@@ -309,21 +334,64 @@ class Controller(QObject):
             self.main_window.ds_num_measurements.setDisabled(False)
             self.main_window.ds_num_measurements_label.setDisabled(False)
 
-    Slot()
+    @Slot()
+    def ds_add_data(self, mp: MeasurementPoint):
+        self.ds_measurement = pd.concat(
+            (
+                self.ds_measurement,
+                pd.DataFrame(
+                    {
+                        "smu_1_voltage": [mp.smu_1_voltage],
+                        "smu_1_current": [mp.smu_1_current],
+                        "smu_2_voltage": [mp.smu_2_voltage],
+                        "smu_2_current": [mp.smu_2_current],
+                        "time": [mp.time],
+                    }
+                ),
+            )
+        )
+        
+        self.main_window.ds_plot.update_data(self.ds_measurement)
+    
+    
+    @Slot()
+    def ms_add_data(self, mp: MeasurementPoint):
+        self.ms_measurement = pd.concat(
+            (
+                self.ms_measurement,
+                pd.DataFrame(
+                    {
+                        "smu_1_voltage": [mp.smu_1_voltage],
+                        "smu_1_current": [mp.smu_1_current],
+                        "smu_2_voltage": [mp.smu_2_voltage],
+                        "smu_2_current": [mp.smu_2_current],
+                        "time": [mp.time],
+                    }
+                ),
+            )
+        )
+        
+        self.main_window.sm_plot.update_data(self.ms_measurement)
 
+    @Slot()
     def ds_stream_clicked(self):
+        
+        if len(self.ms_measurement) > 0:
+            print("Warn about data overwriting")
+            self.ms_measurement = initialize_data()
+        
         params = self.get_datastream_parameters()
 
-        self._thread_datastream = DatastreamMeasurementWorker(params, self.ds_get_smu_1(), self.ds_get_smu_2())
-        self._thread_datastream.finished.connect(self.ds_stop_streaming)
+        self._thread_sweep = DatastreamMeasurementWorker(params, self.ds_get_smu_1(), self.ds_get_smu_2())
+        self._thread_sweep.finished.connect(self.ds_stop_streaming)
+        self._thread_sweep.measurement_made.connect(self.ds_add_data)
 
         # Alter stream button connectins and text
         self.main_window.ds_stream.clicked.disconnect()
-        self.main_window.ds_stream.clicked.connect(self._thread_datastream.stop)
-        self.main_window.ds_stream.clicked.connect(self.ds_stop_streaming)
+        self.main_window.ds_stream.clicked.connect(self._thread_sweep.stop)
         self.main_window.ds_stream.setText("Stop streaming")
 
-        self._thread_datastream.start()
+        self._thread_sweep.start()
 
     @Slot()
     def ds_stop_streaming(self):
@@ -331,6 +399,13 @@ class Controller(QObject):
         self.main_window.ds_stream.clicked.connect(self.ds_stream_clicked)
         self.main_window.ds_stream.setText("Start streaming")
 
+def initialize_data():
+    df = pd.DataFrame(columns=["smu_1_voltage", "smu_1_current", "smu_2_voltage", "smu_2_current", "time"])
+    
+    for column in df.columns:
+        df[column] = df[column].astype(float)
+    
+    return df
 
 def set_input_mode(input: QDoubleSpinBox, is_step: bool, source: Source):
 
@@ -356,6 +431,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     controller = Controller()
+    controller.smu_search_clicked()
 
     # Enter the main event loop
     sys.exit(app.exec())

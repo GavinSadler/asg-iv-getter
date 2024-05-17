@@ -96,7 +96,7 @@ class DatastreamMeasurementWorker(QThread):
         # Sleep a bit before taking the first measurement
         sleep(self.parameters.measurement_pause)
 
-        while True:
+        while not self._stop:
 
             # Take our measuremnt
             s1v, s1c = self.smu_1.measure()
@@ -118,6 +118,10 @@ class DatastreamMeasurementWorker(QThread):
                 break
 
             sleep(self.parameters.measurement_pause)
+
+        # Make sure to turn off SMUs after measurement
+        self.smu_1.output_off()
+        self.smu_2.output_off()
 
     @Slot()
     def stop(self):
@@ -148,7 +152,7 @@ class SweepMeasurementWorker(QThread):
 
         num_sweeps = 0
 
-        while True:
+        while not self._stop:
 
             self.sweep()
             self.sweep_complete.emit()
@@ -159,12 +163,16 @@ class SweepMeasurementWorker(QThread):
 
             sleep(self.parameters.sweep_pause)
 
+        # Make sure to turn off SMUs after measurement
+        self.sweep_smu.output_off()
+        self.constant_smu.output_off()
+
     def sweep(self):
 
         start_time = time.time()
         supply_values = np.arange(self.parameters.sweep_start, self.parameters.sweep_end + self.parameters.sweep_step, self.parameters.sweep_step)
         i = 0
-    
+
         # Get the SMUs ready
         self.sweep_smu.initialize_supply(self.parameters.sweep_source, self.parameters.sweep_compliance)
         self.constant_smu.initialize_supply(self.parameters.constant_source, self.parameters.constant_compliance)
@@ -176,7 +184,7 @@ class SweepMeasurementWorker(QThread):
         # Sleep a bit before taking the first measurement
         sleep(self.parameters.measurement_pause)
 
-        while True:
+        while not self._stop:
 
             # Take our measuremnt
             sv, sc = self.sweep_smu.measure()
@@ -195,7 +203,7 @@ class SweepMeasurementWorker(QThread):
 
             # Output new value at sweep
             self.sweep_smu.source(supply_values[i])
-            
+
             sleep(self.parameters.measurement_pause)
 
         # After we finish the sweep, turn off the SMUs
@@ -245,7 +253,7 @@ if __name__ == "__main__":
 
         dsw.start()
         dsw.wait()
-        
+
         print("=== Testing Datastream time ===")
 
         dsp = DatastreamParameters(Source.CURRENT, 0.010, 10, Source.VOLTAGE, 10, 0.020, DatastreamMode.FIXED_DURATION, 0.1, 5, -1)
@@ -256,7 +264,7 @@ if __name__ == "__main__":
 
         dsw.start()
         dsw.wait()
-        
+
         print("=== Testing Datastream continuous ===")
 
         dsp = DatastreamParameters(Source.CURRENT, 0.010, 10, Source.VOLTAGE, 10, 0.020, DatastreamMode.FIXED_DURATION, 0.1, 5, -1)
@@ -264,42 +272,42 @@ if __name__ == "__main__":
         dsw.measurement_made.connect(print)
         dsw.finished.connect(lambda: print("Continuous was cut off"))
         dsw.finished.connect(dsw.deleteLater)
-        
+
         timer = QTimer()
         timer.timeout.connect(dsw.stop)
-        
+
         dsw.start()
         timer.start(1000 * 3.5)
         dsw.wait()
-        
+
         print("=== Testing Sweep ===")
-        
+
         sp = SweepParameters(Source.VOLTAGE, -1.5, 0.1, 1.5, 0.010, Source.CURRENT, 0.010, 10, 0.01, 1, 3)
         sw = SweepMeasurementWorker(sp, connections[0], connections[1])
         sw.measurement_made.connect(print)
         sw.sweep_complete.connect(lambda: print("Sweep completed"))
         sw.finished.connect(lambda: print("Sweeps finished"))
         sw.finished.connect(sw.deleteLater)
-        
+
         sw.start()
         sw.wait()
-        
+
         print("=== Testing Sweep, but we cut it off ===")
-        
+
         sp = SweepParameters(Source.VOLTAGE, -1.5, 0.1, 1.5, 0.010, Source.CURRENT, 0.010, 10, 0.01, 1, 3)
         sw = SweepMeasurementWorker(sp, connections[0], connections[1])
         sw.measurement_made.connect(print)
         sw.sweep_complete.connect(lambda: print("Sweep completed"))
         sw.finished.connect(lambda: print("Sweeps cut off"))
         sw.finished.connect(sw.deleteLater)
-        
+
         timer = QTimer()
         timer.timeout.connect(sw.stop)
-        
+
         sw.start()
         timer.start(1000 * 3.5)
         sw.wait()
-        
+
         print("End")
         app.quit()
 

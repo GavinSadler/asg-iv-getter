@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowjWbYac.ui'
+## Form generated from reading UI file 'main_windowZfinNG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(677, 665)
+        MainWindow.resize(768, 663)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
@@ -185,6 +185,11 @@ class Ui_MainWindow(object):
 
         self.sm_comments = QTextEdit(self.sm_metadata)
         self.sm_comments.setObjectName(u"sm_comments")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.sm_comments.sizePolicy().hasHeightForWidth())
+        self.sm_comments.setSizePolicy(sizePolicy1)
         self.sm_comments.setMaximumSize(QSize(16777215, 75))
         self.sm_comments.setAutoFillBackground(True)
 
@@ -602,12 +607,19 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.sm_save_data, 0, 1, 1, 1)
 
+        self.sm_plot_settings = QPushButton(self.tab_sweep)
+        self.sm_plot_settings.setObjectName(u"sm_plot_settings")
+        self.sm_plot_settings.setEnabled(True)
+        self.sm_plot_settings.setMinimumSize(QSize(100, 30))
+
+        self.gridLayout.addWidget(self.sm_plot_settings, 0, 2, 1, 1)
+
         self.sm_progress = QProgressBar(self.tab_sweep)
         self.sm_progress.setObjectName(u"sm_progress")
         self.sm_progress.setValue(0)
         self.sm_progress.setTextVisible(False)
 
-        self.gridLayout.addWidget(self.sm_progress, 1, 0, 1, 2)
+        self.gridLayout.addWidget(self.sm_progress, 1, 0, 1, 3)
 
 
         self.verticalLayout_2.addLayout(self.gridLayout)
@@ -618,9 +630,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_6)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.sm_plot_container = QWidget(self.tab_sweep)
+        self.sm_plot_container.setObjectName(u"sm_plot_container")
+        self.verticalLayout_21 = QVBoxLayout(self.sm_plot_container)
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.verticalLayout_21.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout.addItem(self.verticalSpacer)
+        self.verticalLayout.addWidget(self.sm_plot_container)
 
         self.tabWidget.addTab(self.tab_sweep, "")
         self.tab_stream = QWidget()
@@ -629,6 +645,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.ds_metadata = QGroupBox(self.tab_stream)
         self.ds_metadata.setObjectName(u"ds_metadata")
+        sizePolicy.setHeightForWidth(self.ds_metadata.sizePolicy().hasHeightForWidth())
+        self.ds_metadata.setSizePolicy(sizePolicy)
         self.verticalLayout_15 = QVBoxLayout(self.ds_metadata)
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.gridLayout_4 = QGridLayout()
@@ -719,6 +737,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
         self.ds_smu_1_config = QGroupBox(self.tab_stream)
         self.ds_smu_1_config.setObjectName(u"ds_smu_1_config")
+        sizePolicy.setHeightForWidth(self.ds_smu_1_config.sizePolicy().hasHeightForWidth())
+        self.ds_smu_1_config.setSizePolicy(sizePolicy)
         self.verticalLayout_3 = QVBoxLayout(self.ds_smu_1_config)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.horizontalLayout_9 = QHBoxLayout()
@@ -809,6 +829,8 @@ class Ui_MainWindow(object):
 
         self.ds_smu_2_config = QGroupBox(self.tab_stream)
         self.ds_smu_2_config.setObjectName(u"ds_smu_2_config")
+        sizePolicy.setHeightForWidth(self.ds_smu_2_config.sizePolicy().hasHeightForWidth())
+        self.ds_smu_2_config.setSizePolicy(sizePolicy)
         self.verticalLayout_14 = QVBoxLayout(self.ds_smu_2_config)
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.horizontalLayout_16 = QHBoxLayout()
@@ -904,6 +926,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
         self.ds_measurement_config = QGroupBox(self.tab_stream)
         self.ds_measurement_config.setObjectName(u"ds_measurement_config")
+        sizePolicy.setHeightForWidth(self.ds_measurement_config.sizePolicy().hasHeightForWidth())
+        self.ds_measurement_config.setSizePolicy(sizePolicy)
         self.horizontalLayout_29 = QHBoxLayout(self.ds_measurement_config)
         self.horizontalLayout_29.setObjectName(u"horizontalLayout_29")
         self.verticalLayout_12 = QVBoxLayout()
@@ -992,38 +1016,56 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_17.addWidget(self.ds_measurement_config)
 
-        self.gridLayout_3 = QGridLayout()
+        self.widget = QWidget(self.tab_stream)
+        self.widget.setObjectName(u"widget")
+        self.gridLayout_3 = QGridLayout(self.widget)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.ds_stream = QPushButton(self.tab_stream)
-        self.ds_stream.setObjectName(u"ds_stream")
-        self.ds_stream.setEnabled(True)
-        self.ds_stream.setMinimumSize(QSize(100, 30))
-
-        self.gridLayout_3.addWidget(self.ds_stream, 0, 0, 1, 1)
-
-        self.ds_save_data = QPushButton(self.tab_stream)
+        self.ds_save_data = QPushButton(self.widget)
         self.ds_save_data.setObjectName(u"ds_save_data")
         self.ds_save_data.setEnabled(False)
         self.ds_save_data.setMinimumSize(QSize(100, 30))
 
-        self.gridLayout_3.addWidget(self.ds_save_data, 0, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.ds_save_data, 1, 1, 1, 1)
 
-        self.ds_progress = QProgressBar(self.tab_stream)
+        self.ds_stream = QPushButton(self.widget)
+        self.ds_stream.setObjectName(u"ds_stream")
+        self.ds_stream.setEnabled(True)
+        self.ds_stream.setMinimumSize(QSize(100, 30))
+
+        self.gridLayout_3.addWidget(self.ds_stream, 1, 0, 1, 1)
+
+        self.ds_plot_settings = QPushButton(self.widget)
+        self.ds_plot_settings.setObjectName(u"ds_plot_settings")
+        self.ds_plot_settings.setEnabled(True)
+        self.ds_plot_settings.setMinimumSize(QSize(100, 30))
+
+        self.gridLayout_3.addWidget(self.ds_plot_settings, 1, 2, 1, 1)
+
+        self.ds_progress = QProgressBar(self.widget)
         self.ds_progress.setObjectName(u"ds_progress")
         self.ds_progress.setValue(0)
         self.ds_progress.setTextVisible(False)
 
-        self.gridLayout_3.addWidget(self.ds_progress, 1, 0, 1, 2)
+        self.gridLayout_3.addWidget(self.ds_progress, 2, 0, 1, 3)
 
 
-        self.horizontalLayout_17.addLayout(self.gridLayout_3)
+        self.horizontalLayout_17.addWidget(self.widget)
 
 
         self.verticalLayout_16.addLayout(self.horizontalLayout_17)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.ds_plot_container = QWidget(self.tab_stream)
+        self.ds_plot_container.setObjectName(u"ds_plot_container")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.ds_plot_container.sizePolicy().hasHeightForWidth())
+        self.ds_plot_container.setSizePolicy(sizePolicy2)
+        self.verticalLayout_22 = QVBoxLayout(self.ds_plot_container)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_16.addItem(self.verticalSpacer_2)
+        self.verticalLayout_16.addWidget(self.ds_plot_container)
 
         self.tabWidget.addTab(self.tab_stream, "")
         self.tab_config = QWidget()
@@ -1046,7 +1088,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1113,6 +1155,7 @@ class Ui_MainWindow(object):
         self.sm_constant_compliance.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
         self.sm_stop.setText(QCoreApplication.translate("MainWindow", u"Stop Measurement", None))
         self.sm_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Data", None))
+        self.sm_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_sweep), QCoreApplication.translate("MainWindow", u"Sweep Measurement", None))
         self.ds_metadata.setTitle(QCoreApplication.translate("MainWindow", u"Metadata", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Step of Process:", None))
@@ -1152,8 +1195,9 @@ class Ui_MainWindow(object):
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"Pause Between Measurements", None))
         self.ds_duration_label.setText(QCoreApplication.translate("MainWindow", u"Total Duration", None))
         self.ds_duration.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
-        self.ds_stream.setText(QCoreApplication.translate("MainWindow", u"Start Streaming", None))
         self.ds_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Data", None))
+        self.ds_stream.setText(QCoreApplication.translate("MainWindow", u"Start Streaming", None))
+        self.ds_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_stream), QCoreApplication.translate("MainWindow", u"Data Streaming", None))
         self.label.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_config), QCoreApplication.translate("MainWindow", u"Sourcemeter Configuration", None))

@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow
 
+from Plot import Plot
 from ui_main_window import Ui_MainWindow
 
 
@@ -9,6 +10,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         QMainWindow.__init__(self)
         self.setupUi(self)
         self.retranslateUi(self)
+
+    def setup_plots(self, ms_data, ds_data):
+        self.sm_plot = Plot(ms_data, self.sm_plot_container)
+        self.sm_plot_container.layout().addWidget(self.sm_plot)
+        
+        self.ds_plot = Plot(ds_data, self.ds_plot_container)
+        self.ds_plot_container.layout().addWidget(self.ds_plot)
 
 
 if __name__ == "__main__":

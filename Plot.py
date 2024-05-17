@@ -1,14 +1,37 @@
 import sys
-import numpy as np
-from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
+
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
+from matplotlib.figure import Figure
+from matplotlib.lines import Line2D
+from PySide6.QtCore import QTimer, Slot
+from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QDialog, QDialogButtonBox
+import pandas as pd
+
+from PlotParamsDialog import PlotParam, PlotParamsDialog
+
 
 class Plot(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
 
+    data: pd.DataFrame
+    x_plot: PlotParam
+    y_plot: PlotParam
+
+    _plot_param_dialog: PlotParamsDialog
+
+    _figure: Figure
+    _axes: Axes
+    _line: Line2D
+    _canvas: FigureCanvasQTAgg
+
+    def __init__(self, data: pd.DataFrame, parent=None):
+        super().__init__(parent)
+        
+        # Initialize fields
+        self.data = data
+        
         self._figure, self._axes = plt.subplots()
         self._canvas = FigureCanvasQTAgg(self._figure)
 
@@ -16,35 +39,57 @@ class Plot(QWidget):
         layout.addWidget(NavigationToolbar2QT(self._canvas))
         layout.addWidget(self._canvas)
 
-        self._line, = self._axes.plot([], [])
-        self._x_data = np.array([])
-        self._y_data = np.array([])
-
-        self._legend_labels = []
-        self._x_title = ""
-        self._y_title = ""
-
-    def update_plot(self, x_data: np.ndarray, y_data: np.ndarray):
-        self._x_data = x_data
-        self._y_data = y_data
-
-        self._line.set_data(self._x_data, self._y_data)
-        self._axes.relim()
+        (self._line,) = self._axes.plot([], [])
+        
+        # Update titles
+        self._update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
+        self._reset_dialog()
+    
+    @Slot()
+    def update_plot_parameters(self):
+        self._plot_param_dialog.exec()
+    
+    @Slot()
+    def _update_plot_params(self, x: PlotParam, y: PlotParam):
+        self.x_plot = x
+        self.y_plot = y
+        self._axes.set_xlabel(self.x_plot.name)
+        self._axes.set_ylabel(self.y_plot.name)
+        self.refresh()
+    
+    @Slot()
+    def _reset_dialog(self):
+        # Recreate the dialog object
+        self._plot_param_dialog = PlotParamsDialog(self.x_plot, self.y_plot)
+        self._plot_param_dialog.plot_params_updated.connect(self._update_plot_params)
+        self._plot_param_dialog.finished.connect(self._reset_dialog)
+    
+    @Slot()
+    def refresh(self):
+        self._figure.tight_layout()
         self._axes.autoscale_view()
+        self._axes.relim()
         self._canvas.draw()
+    
+    @Slot()
+    def update_data(self, new_data: pd.DataFrame):
+        self.data = new_data
+        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
+        self.refresh()
 
-    def set_axis_titles(self, x_title: str, y_title: str):
-        self._x_title = x_title
-        self._y_title = y_title
-        self._axes.set_xlabel(self._x_title)
-        self._axes.set_ylabel(self._y_title)
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.refresh()
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = Plot()
-    widget.set_axis_titles("X-axis", "Y-axis")
-    
+    widget.set_titles("X-axis", "Y-axis")
+
     phase_shift = 0
+
     def update_data():
         global phase_shift
         phase_shift += 0.1
@@ -56,6 +101,6 @@ if __name__ == "__main__":
     timer.timeout.connect(update_data)
     timer.timeout.connect(lambda: timer.start(0.1))
     timer.start(0.1)
-    
+
     widget.show()
     sys.exit(app.exec())
