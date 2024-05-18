@@ -21,7 +21,7 @@ def zero():
     return 0
 
 # Comment this and the source meter will generate random garbage
-random.random = zero
+# random.random = zero
 
 def encode_float(f: float):
     """Turns a float value into bytes"""

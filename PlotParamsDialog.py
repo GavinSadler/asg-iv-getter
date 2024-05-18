@@ -13,6 +13,9 @@ class PlotParam(Enum):
     smu_2_voltage = 2
     smu_2_current = 3
     time = 4
+    
+    def strings() -> List[str]:
+        return [p.name for p in PlotParam]
 
 
 # class PlotParamsDialog(QDialog, Ui_Dialog):
@@ -117,6 +120,8 @@ class PlotParamsDialog(QDialog, Ui_Dialog):
                         
         self.adjustSize()
         self.setFixedSize(self.size())
+        
+        self.show()
 
     def get_params(self):
         
@@ -143,8 +148,7 @@ if __name__ == "__main__":
     # Create the application instance
     app = QApplication(sys.argv)
 
-    ppd = PlotParamsDialog(pd.DataFrame(columns=[p.name for p in PlotParam]))
-    print(ppd.get_params())
+    print(PlotParamsDialog(pd.DataFrame(columns=[p.name for p in PlotParam])).get_params())
 
     # Enter the main event loop
     sys.exit(app.exec())

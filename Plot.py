@@ -19,8 +19,6 @@ class Plot(QWidget):
     x_plot: PlotParam
     y_plot: PlotParam
 
-    _plot_param_dialog: PlotParamsDialog
-
     _figure: Figure
     _axes: Axes
     _line: Line2D
@@ -28,10 +26,10 @@ class Plot(QWidget):
 
     def __init__(self, data: pd.DataFrame, parent=None):
         super().__init__(parent)
-        
+
         # Initialize fields
         self.data = data
-        
+
         self._figure, self._axes = plt.subplots()
         self._canvas = FigureCanvasQTAgg(self._figure)
 
@@ -40,15 +38,16 @@ class Plot(QWidget):
         layout.addWidget(self._canvas)
 
         (self._line,) = self._axes.plot([], [])
-        
+
         # Update titles
         self._update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
-        self._reset_dialog()
-    
+
     @Slot()
     def update_plot_parameters(self):
-        self._plot_param_dialog.exec()
-    
+        x, y = PlotParamsDialog(pd.DataFrame(columns=PlotParam.strings()), self, self.x_plot, self.y_plot).get_params()
+        print(x, y)
+        self._update_plot_params(x, y)
+
     @Slot()
     def _update_plot_params(self, x: PlotParam, y: PlotParam):
         self.x_plot = x
@@ -56,21 +55,14 @@ class Plot(QWidget):
         self._axes.set_xlabel(self.x_plot.name)
         self._axes.set_ylabel(self.y_plot.name)
         self.refresh()
-    
-    @Slot()
-    def _reset_dialog(self):
-        # Recreate the dialog object
-        self._plot_param_dialog = PlotParamsDialog(self.x_plot, self.y_plot)
-        self._plot_param_dialog.plot_params_updated.connect(self._update_plot_params)
-        self._plot_param_dialog.finished.connect(self._reset_dialog)
-    
+
     @Slot()
     def refresh(self):
         self._figure.tight_layout()
         self._axes.autoscale_view()
         self._axes.relim()
         self._canvas.draw()
-    
+
     @Slot()
     def update_data(self, new_data: pd.DataFrame):
         self.data = new_data
@@ -80,7 +72,6 @@ class Plot(QWidget):
     def resizeEvent(self, event):
         super().resizeEvent(event)
         self.refresh()
-
 
 
 if __name__ == "__main__":
