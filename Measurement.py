@@ -159,7 +159,7 @@ class SweepMeasurementWorker(QThread):
             num_sweeps += 1
             if num_sweeps >= self.parameters.sweep_count or self._stop:
                 break
-            
+
             # Trigger this after breaking since after breaking we already get a
             # thread termination signal
             self.sweep_complete.emit()

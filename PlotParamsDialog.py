@@ -14,7 +14,7 @@ class PlotParam(Enum):
     smu_2_voltage = 2
     smu_2_current = 3
     time = 4
-    
+
     def strings() -> List[str]:
         return [p.name for p in PlotParam]
 
@@ -89,20 +89,21 @@ class PlotParam(Enum):
 #         # And notify subscribers
 #         self.plot_params_updated.emit(ppx, ppy)
 
+
 class PlotParamsDialog(QDialog, Ui_Dialog):
 
     x_radios: List[QRadioButton]
     y_radios: List[QRadioButton]
-    
+
     def __init__(self, df: pd.DataFrame, parent=None, x_selected: PlotParam = PlotParam.smu_1_voltage, y_selected: PlotParam = PlotParam.smu_1_current):
         QDialog.__init__(self)
         self.setupUi(self)
         self.retranslateUi(self)
-        
+
         # Initialize fields
         self.x_radios: List[QRadioButton] = []
         self.y_radios: List[QRadioButton] = []
-        
+
         # Add all of the radio buttons
         for column in df.columns:
             x_radio = QRadioButton(column, self.x_radio_group)
@@ -118,26 +119,27 @@ class PlotParamsDialog(QDialog, Ui_Dialog):
 
             if y_radio.text() == y_selected.name:
                 y_radio.setChecked(True)
-                        
+
         self.adjustSize()
         self.setFixedSize(self.size())
-        
+
         self.show()
 
     def get_params(self):
-        
+
         if self.exec():
             for r in self.x_radios:
                 if r.isChecked():
                     x_param = PlotParam[r.text()]
-            
+
             for r in self.y_radios:
                 if r.isChecked():
                     y_param = PlotParam[r.text()]
-        
-            return x_param, y_param     
+
+            return x_param, y_param
 
         return None
+
 
 if __name__ == "__main__":
 

@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from enum import Enum
 
@@ -9,6 +8,7 @@ class MeasurementField(Enum):
     SMU_2_VOLTAGE = 2
     SMU_2_CURRENT = 3
     TIME = 4
+
 
 @dataclass
 class Measurement:

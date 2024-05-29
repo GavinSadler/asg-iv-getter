@@ -18,28 +18,28 @@ from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QDialog, QHBox
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
-            Dialog.setObjectName(u"Dialog")
+            Dialog.setObjectName("Dialog")
         Dialog.resize(450, 300)
         Dialog.setMinimumSize(QSize(450, 300))
         Dialog.setModal(True)
         self.vboxLayout = QVBoxLayout(Dialog)
-        self.vboxLayout.setObjectName(u"vboxLayout")
+        self.vboxLayout.setObjectName("vboxLayout")
         self.messages = QPlainTextEdit(Dialog)
-        self.messages.setObjectName(u"messages")
+        self.messages.setObjectName("messages")
         self.messages.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
         self.messages.setReadOnly(True)
 
         self.vboxLayout.addWidget(self.messages)
 
         self.progress_bar = QProgressBar(Dialog)
-        self.progress_bar.setObjectName(u"progress_bar")
+        self.progress_bar.setObjectName("progress_bar")
 
         self.vboxLayout.addWidget(self.progress_bar)
 
         self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setObjectName("horizontalLayout")
         self.button_cancel = QPushButton(Dialog)
-        self.button_cancel.setObjectName(u"button_cancel")
+        self.button_cancel.setObjectName("button_cancel")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -53,25 +53,24 @@ class Ui_Dialog(object):
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.button_confirm = QPushButton(Dialog)
-        self.button_confirm.setObjectName(u"button_confirm")
+        self.button_confirm.setObjectName("button_confirm")
         self.button_confirm.setEnabled(False)
 
         self.horizontalLayout.addWidget(self.button_confirm)
 
-
         self.vboxLayout.addLayout(self.horizontalLayout)
-
 
         self.retranslateUi(Dialog)
         self.button_cancel.clicked.connect(Dialog.reject)
         self.button_confirm.clicked.connect(Dialog.accept)
 
         QMetaObject.connectSlotsByName(Dialog)
+
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
-        self.button_cancel.setText(QCoreApplication.translate("Dialog", u"Cancel", None))
-        self.button_confirm.setText(QCoreApplication.translate("Dialog", u"Confirm", None))
-    # retranslateUi
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Dialog", None))
+        self.button_cancel.setText(QCoreApplication.translate("Dialog", "Cancel", None))
+        self.button_confirm.setText(QCoreApplication.translate("Dialog", "Confirm", None))
 
+    # retranslateUi

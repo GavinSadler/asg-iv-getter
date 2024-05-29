@@ -17,15 +17,19 @@ class Mode(Enum):
     SWEEP = 0
     CONSTANT = 1
 
+
 def zero():
     return 0
+
 
 # Comment this and the source meter will generate random garbage
 # random.random = zero
 
+
 def encode_float(f: float):
     """Turns a float value into bytes"""
     return f"{f:.6f}".encode()
+
 
 class SourceMeter:
 
@@ -64,14 +68,14 @@ class SourceMeter:
 
     def initialize_supply(self, supply_source: Source, compliance: float):
         """Sets the SMU supply source and sense parameters, with specified compliance"""
-                
+
         if supply_source is Source.VOLTAGE:
             self._send_command(b":SOUR:FUNC VOLT")
             self._send_command(b":SENS:CURR:PROT:LEV " + encode_float(compliance))
         else:
             self._send_command(b":SOUR:FUNC CURR")
             self._send_command(b":SENS:VOLT:PROT:LEV " + encode_float(compliance))
-            
+
         self.source_mode = supply_source
 
     def source(self, supply_value: float):
@@ -188,7 +192,7 @@ class ConnectSMUWorker(QThread):
         self.status_update.emit(f"-----")
         self.status_update.emit(f"Port scan concluded\n")
         self.status_update.emit(f"Connected SMUs:")
-        
+
         for connection in smu_connections:
             self.status_update.emit(f"{connection._conn.name}, SN:{connection.serial_number}")
 
@@ -197,7 +201,7 @@ class ConnectSMUWorker(QThread):
             self.connections_made.emit(smu_connections)
         else:
             self.status_update.emit(f"Search cancelled")
-        
+
         # Add a newline after the search is finished
         self.status_update.emit("")
 
