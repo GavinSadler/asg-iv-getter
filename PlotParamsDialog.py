@@ -2,8 +2,7 @@ from enum import Enum
 from typing import List
 
 import pandas as pd
-from PySide6.QtCore import Signal, Slot
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QGroupBox, QHBoxLayout, QRadioButton, QVBoxLayout
+from PySide6.QtWidgets import QDialog, QRadioButton
 
 from ui_plot_params_dialog import Ui_Dialog
 
