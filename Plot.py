@@ -2,13 +2,13 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 from PySide6.QtCore import QTimer, Slot
-from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget, QDialog, QDialogButtonBox
-import pandas as pd
+from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QWidget
 
 from PlotParamsDialog import PlotParam, PlotParamsDialog
 
@@ -40,16 +40,15 @@ class Plot(QWidget):
         (self._line,) = self._axes.plot([], [])
 
         # Update titles
-        self._update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
+        self.update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
 
     @Slot()
-    def update_plot_parameters(self):
+    def show_plot_params_dialog(self):
         x, y = PlotParamsDialog(pd.DataFrame(columns=PlotParam.strings()), self, self.x_plot, self.y_plot).get_params()
-        print(x, y)
-        self._update_plot_params(x, y)
+        self.update_plot_params(x, y)
 
     @Slot()
-    def _update_plot_params(self, x: PlotParam, y: PlotParam):
+    def update_plot_params(self, x: PlotParam, y: PlotParam):
         self.x_plot = x
         self.y_plot = y
         self._axes.set_xlabel(self.x_plot.name)
@@ -58,6 +57,7 @@ class Plot(QWidget):
 
     @Slot()
     def refresh(self):
+        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
         self._figure.tight_layout()
         self._axes.autoscale_view()
         self._axes.relim()
@@ -66,7 +66,6 @@ class Plot(QWidget):
     @Slot()
     def update_data(self, new_data: pd.DataFrame):
         self.data = new_data
-        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
         self.refresh()
 
     def resizeEvent(self, event):

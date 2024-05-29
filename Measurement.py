@@ -1,6 +1,6 @@
+import time
 from dataclasses import dataclass
 from enum import Enum
-import time
 
 import numpy as np
 from PySide6.QtCore import QThread, Signal, Slot
@@ -155,11 +155,14 @@ class SweepMeasurementWorker(QThread):
         while not self._stop:
 
             self.sweep()
-            self.sweep_complete.emit()
 
             num_sweeps += 1
             if num_sweeps >= self.parameters.sweep_count or self._stop:
                 break
+            
+            # Trigger this after breaking since after breaking we already get a
+            # thread termination signal
+            self.sweep_complete.emit()
 
             sleep(self.parameters.sweep_pause)
 
@@ -218,11 +221,11 @@ class SweepMeasurementWorker(QThread):
 if __name__ == "__main__":
 
     import sys
+    from typing import List
 
     from PySide6.QtCore import QCoreApplication, QTimer
 
     from SourceMeter import ConnectSMUWorker
-    from typing import List
 
     app = QCoreApplication(sys.argv)
 

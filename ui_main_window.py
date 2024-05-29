@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowZfinNG.ui'
+## Form generated from reading UI file 'main_windowbKKbJR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(768, 663)
+        MainWindow.resize(786, 826)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
@@ -122,35 +122,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_10.addWidget(self.label_33, 2, 0, 1, 1)
 
-        self.label_34 = QLabel(self.sm_metadata)
-        self.label_34.setObjectName(u"label_34")
-        sizePolicy.setHeightForWidth(self.label_34.sizePolicy().hasHeightForWidth())
-        self.label_34.setSizePolicy(sizePolicy)
-
-        self.gridLayout_10.addWidget(self.label_34, 0, 2, 1, 1)
-
-        self.label_35 = QLabel(self.sm_metadata)
-        self.label_35.setObjectName(u"label_35")
-        sizePolicy.setHeightForWidth(self.label_35.sizePolicy().hasHeightForWidth())
-        self.label_35.setSizePolicy(sizePolicy)
-
-        self.gridLayout_10.addWidget(self.label_35, 0, 0, 1, 1)
-
-        self.sm_step_of_process = QLineEdit(self.sm_metadata)
-        self.sm_step_of_process.setObjectName(u"sm_step_of_process")
-
-        self.gridLayout_10.addWidget(self.sm_step_of_process, 2, 1, 1, 1)
-
-        self.sm_wafer_num = QLineEdit(self.sm_metadata)
-        self.sm_wafer_num.setObjectName(u"sm_wafer_num")
-
-        self.gridLayout_10.addWidget(self.sm_wafer_num, 0, 1, 1, 1)
-
-        self.label_36 = QLabel(self.sm_metadata)
-        self.label_36.setObjectName(u"label_36")
-
-        self.gridLayout_10.addWidget(self.label_36, 4, 0, 1, 1)
-
         self.sm_chip_num = QLineEdit(self.sm_metadata)
         self.sm_chip_num.setObjectName(u"sm_chip_num")
 
@@ -160,6 +131,18 @@ class Ui_MainWindow(object):
         self.label_37.setObjectName(u"label_37")
 
         self.gridLayout_10.addWidget(self.label_37, 2, 2, 1, 1)
+
+        self.sm_step_of_process = QLineEdit(self.sm_metadata)
+        self.sm_step_of_process.setObjectName(u"sm_step_of_process")
+
+        self.gridLayout_10.addWidget(self.sm_step_of_process, 2, 1, 1, 1)
+
+        self.label_35 = QLabel(self.sm_metadata)
+        self.label_35.setObjectName(u"label_35")
+        sizePolicy.setHeightForWidth(self.label_35.sizePolicy().hasHeightForWidth())
+        self.label_35.setSizePolicy(sizePolicy)
+
+        self.gridLayout_10.addWidget(self.label_35, 0, 0, 1, 1)
 
         self.widget_9 = QWidget(self.sm_metadata)
         self.widget_9.setObjectName(u"widget_9")
@@ -171,10 +154,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_28.addWidget(self.sm_dark)
 
-        self.dm_light = QRadioButton(self.widget_9)
-        self.dm_light.setObjectName(u"dm_light")
+        self.sm_light = QRadioButton(self.widget_9)
+        self.sm_light.setObjectName(u"sm_light")
 
-        self.horizontalLayout_28.addWidget(self.dm_light)
+        self.horizontalLayout_28.addWidget(self.sm_light)
 
         self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -183,6 +166,18 @@ class Ui_MainWindow(object):
 
         self.gridLayout_10.addWidget(self.widget_9, 2, 3, 1, 1)
 
+        self.sm_wafer_num = QLineEdit(self.sm_metadata)
+        self.sm_wafer_num.setObjectName(u"sm_wafer_num")
+
+        self.gridLayout_10.addWidget(self.sm_wafer_num, 0, 1, 1, 1)
+
+        self.label_34 = QLabel(self.sm_metadata)
+        self.label_34.setObjectName(u"label_34")
+        sizePolicy.setHeightForWidth(self.label_34.sizePolicy().hasHeightForWidth())
+        self.label_34.setSizePolicy(sizePolicy)
+
+        self.gridLayout_10.addWidget(self.label_34, 0, 2, 1, 1)
+
         self.sm_comments = QTextEdit(self.sm_metadata)
         self.sm_comments.setObjectName(u"sm_comments")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -190,10 +185,25 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.sm_comments.sizePolicy().hasHeightForWidth())
         self.sm_comments.setSizePolicy(sizePolicy1)
-        self.sm_comments.setMaximumSize(QSize(16777215, 75))
+        self.sm_comments.setMaximumSize(QSize(16777215, 50))
         self.sm_comments.setAutoFillBackground(True)
 
         self.gridLayout_10.addWidget(self.sm_comments, 4, 1, 1, 3)
+
+        self.label_36 = QLabel(self.sm_metadata)
+        self.label_36.setObjectName(u"label_36")
+
+        self.gridLayout_10.addWidget(self.label_36, 4, 0, 1, 1)
+
+        self.sm_data_path_button = QPushButton(self.sm_metadata)
+        self.sm_data_path_button.setObjectName(u"sm_data_path_button")
+
+        self.gridLayout_10.addWidget(self.sm_data_path_button, 5, 0, 1, 1)
+
+        self.sm_data_path = QLabel(self.sm_metadata)
+        self.sm_data_path.setObjectName(u"sm_data_path")
+
+        self.gridLayout_10.addWidget(self.sm_data_path, 5, 1, 1, 3)
 
 
         self.verticalLayout_20.addLayout(self.gridLayout_10)
@@ -234,7 +244,7 @@ class Ui_MainWindow(object):
         self.sm_quick_measurement_pause.setMaximum(9999.000000000000000)
         self.sm_quick_measurement_pause.setSingleStep(0.000001000000000)
         self.sm_quick_measurement_pause.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
-        self.sm_quick_measurement_pause.setValue(0.010000000000000)
+        self.sm_quick_measurement_pause.setValue(0.100000000000000)
 
         self.gridLayout_5.addWidget(self.sm_quick_measurement_pause, 1, 1, 1, 1)
 
@@ -278,7 +288,7 @@ class Ui_MainWindow(object):
         self.sm_measurement_pause.setMaximum(9999.000000000000000)
         self.sm_measurement_pause.setSingleStep(0.000001000000000)
         self.sm_measurement_pause.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
-        self.sm_measurement_pause.setValue(0.010000000000000)
+        self.sm_measurement_pause.setValue(0.100000000000000)
 
         self.gridLayout_6.addWidget(self.sm_measurement_pause, 2, 1, 1, 1)
 
@@ -643,6 +653,8 @@ class Ui_MainWindow(object):
         self.tab_stream.setObjectName(u"tab_stream")
         self.verticalLayout_16 = QVBoxLayout(self.tab_stream)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.ds_metadata = QGroupBox(self.tab_stream)
         self.ds_metadata.setObjectName(u"ds_metadata")
         sizePolicy.setHeightForWidth(self.ds_metadata.sizePolicy().hasHeightForWidth())
@@ -651,19 +663,17 @@ class Ui_MainWindow(object):
         self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.ds_chip_num = QLineEdit(self.ds_metadata)
+        self.ds_chip_num.setObjectName(u"ds_chip_num")
+
+        self.gridLayout_4.addWidget(self.ds_chip_num, 0, 3, 1, 1)
+
         self.label_23 = QLabel(self.ds_metadata)
         self.label_23.setObjectName(u"label_23")
         sizePolicy.setHeightForWidth(self.label_23.sizePolicy().hasHeightForWidth())
         self.label_23.setSizePolicy(sizePolicy)
 
         self.gridLayout_4.addWidget(self.label_23, 2, 0, 1, 1)
-
-        self.label_24 = QLabel(self.ds_metadata)
-        self.label_24.setObjectName(u"label_24")
-        sizePolicy.setHeightForWidth(self.label_24.sizePolicy().hasHeightForWidth())
-        self.label_24.setSizePolicy(sizePolicy)
-
-        self.gridLayout_4.addWidget(self.label_24, 0, 2, 1, 1)
 
         self.label_38 = QLabel(self.ds_metadata)
         self.label_38.setObjectName(u"label_38")
@@ -672,25 +682,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.label_38, 0, 0, 1, 1)
 
-        self.ds_step_of_process = QLineEdit(self.ds_metadata)
-        self.ds_step_of_process.setObjectName(u"ds_step_of_process")
-
-        self.gridLayout_4.addWidget(self.ds_step_of_process, 2, 1, 1, 1)
-
-        self.ds_wafer_num = QLineEdit(self.ds_metadata)
-        self.ds_wafer_num.setObjectName(u"ds_wafer_num")
-
-        self.gridLayout_4.addWidget(self.ds_wafer_num, 0, 1, 1, 1)
-
         self.label_39 = QLabel(self.ds_metadata)
         self.label_39.setObjectName(u"label_39")
 
         self.gridLayout_4.addWidget(self.label_39, 4, 0, 1, 1)
-
-        self.ds_chip_num = QLineEdit(self.ds_metadata)
-        self.ds_chip_num.setObjectName(u"ds_chip_num")
-
-        self.gridLayout_4.addWidget(self.ds_chip_num, 0, 3, 1, 1)
 
         self.label_40 = QLabel(self.ds_metadata)
         self.label_40.setObjectName(u"label_40")
@@ -719,6 +714,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.widget_7, 2, 3, 1, 1)
 
+        self.label_24 = QLabel(self.ds_metadata)
+        self.label_24.setObjectName(u"label_24")
+        sizePolicy.setHeightForWidth(self.label_24.sizePolicy().hasHeightForWidth())
+        self.label_24.setSizePolicy(sizePolicy)
+
+        self.gridLayout_4.addWidget(self.label_24, 0, 2, 1, 1)
+
         self.ds_comments = QTextEdit(self.ds_metadata)
         self.ds_comments.setObjectName(u"ds_comments")
         self.ds_comments.setMinimumSize(QSize(0, 0))
@@ -727,11 +729,124 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.ds_comments, 4, 1, 1, 3)
 
+        self.ds_step_of_process = QLineEdit(self.ds_metadata)
+        self.ds_step_of_process.setObjectName(u"ds_step_of_process")
+
+        self.gridLayout_4.addWidget(self.ds_step_of_process, 2, 1, 1, 1)
+
+        self.ds_wafer_num = QLineEdit(self.ds_metadata)
+        self.ds_wafer_num.setObjectName(u"ds_wafer_num")
+
+        self.gridLayout_4.addWidget(self.ds_wafer_num, 0, 1, 1, 1)
+
+        self.ds_data_path_button = QPushButton(self.ds_metadata)
+        self.ds_data_path_button.setObjectName(u"ds_data_path_button")
+
+        self.gridLayout_4.addWidget(self.ds_data_path_button, 5, 0, 1, 1)
+
+        self.ds_data_path = QLabel(self.ds_metadata)
+        self.ds_data_path.setObjectName(u"ds_data_path")
+
+        self.gridLayout_4.addWidget(self.ds_data_path, 5, 1, 1, 3)
+
 
         self.verticalLayout_15.addLayout(self.gridLayout_4)
 
 
-        self.verticalLayout_16.addWidget(self.ds_metadata)
+        self.horizontalLayout_2.addWidget(self.ds_metadata)
+
+        self.ds_measurement_config = QGroupBox(self.tab_stream)
+        self.ds_measurement_config.setObjectName(u"ds_measurement_config")
+        self.horizontalLayout_29 = QHBoxLayout(self.ds_measurement_config)
+        self.horizontalLayout_29.setObjectName(u"horizontalLayout_29")
+        self.verticalLayout_12 = QVBoxLayout()
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.ds_continuous = QRadioButton(self.ds_measurement_config)
+        self.ds_continuous.setObjectName(u"ds_continuous")
+        self.ds_continuous.setChecked(True)
+
+        self.verticalLayout_12.addWidget(self.ds_continuous)
+
+        self.ds_fixed_num = QRadioButton(self.ds_measurement_config)
+        self.ds_fixed_num.setObjectName(u"ds_fixed_num")
+        self.ds_fixed_num.setChecked(False)
+
+        self.verticalLayout_12.addWidget(self.ds_fixed_num)
+
+        self.ds_fixed_duration = QRadioButton(self.ds_measurement_config)
+        self.ds_fixed_duration.setObjectName(u"ds_fixed_duration")
+
+        self.verticalLayout_12.addWidget(self.ds_fixed_duration)
+
+
+        self.horizontalLayout_29.addLayout(self.verticalLayout_12)
+
+        self.line_4 = QFrame(self.ds_measurement_config)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setFrameShape(QFrame.Shape.VLine)
+        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_29.addWidget(self.line_4)
+
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.ds_measurement_pause = QDoubleSpinBox(self.ds_measurement_config)
+        self.ds_measurement_pause.setObjectName(u"ds_measurement_pause")
+        self.ds_measurement_pause.setMinimumSize(QSize(100, 0))
+        self.ds_measurement_pause.setDecimals(6)
+        self.ds_measurement_pause.setMaximum(9999.000000000000000)
+        self.ds_measurement_pause.setSingleStep(0.000001000000000)
+        self.ds_measurement_pause.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
+        self.ds_measurement_pause.setValue(0.100000000000000)
+
+        self.gridLayout_7.addWidget(self.ds_measurement_pause, 2, 1, 1, 1)
+
+        self.ds_duration_label = QLabel(self.ds_measurement_config)
+        self.ds_duration_label.setObjectName(u"ds_duration_label")
+        self.ds_duration_label.setEnabled(False)
+
+        self.gridLayout_7.addWidget(self.ds_duration_label, 0, 0, 1, 1)
+
+        self.ds_duration = QDoubleSpinBox(self.ds_measurement_config)
+        self.ds_duration.setObjectName(u"ds_duration")
+        self.ds_duration.setEnabled(False)
+        self.ds_duration.setMinimumSize(QSize(100, 0))
+        self.ds_duration.setDecimals(6)
+        self.ds_duration.setMaximum(9999.000000000000000)
+        self.ds_duration.setSingleStep(0.000001000000000)
+        self.ds_duration.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
+        self.ds_duration.setValue(10.000000000000000)
+
+        self.gridLayout_7.addWidget(self.ds_duration, 0, 1, 1, 1)
+
+        self.label_21 = QLabel(self.ds_measurement_config)
+        self.label_21.setObjectName(u"label_21")
+
+        self.gridLayout_7.addWidget(self.label_21, 2, 0, 1, 1)
+
+        self.ds_num_measurements = QSpinBox(self.ds_measurement_config)
+        self.ds_num_measurements.setObjectName(u"ds_num_measurements")
+        self.ds_num_measurements.setEnabled(False)
+        self.ds_num_measurements.setMinimumSize(QSize(100, 0))
+        self.ds_num_measurements.setMinimum(1)
+        self.ds_num_measurements.setValue(2)
+
+        self.gridLayout_7.addWidget(self.ds_num_measurements, 1, 1, 1, 1)
+
+        self.ds_num_measurements_label = QLabel(self.ds_measurement_config)
+        self.ds_num_measurements_label.setObjectName(u"ds_num_measurements_label")
+        self.ds_num_measurements_label.setEnabled(False)
+
+        self.gridLayout_7.addWidget(self.ds_num_measurements_label, 1, 0, 1, 1)
+
+
+        self.horizontalLayout_29.addLayout(self.gridLayout_7)
+
+
+        self.horizontalLayout_2.addWidget(self.ds_measurement_config)
+
+
+        self.verticalLayout_16.addLayout(self.horizontalLayout_2)
 
         self.horizontalLayout_22 = QHBoxLayout()
         self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
@@ -922,137 +1037,37 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addLayout(self.horizontalLayout_22)
 
-        self.horizontalLayout_17 = QHBoxLayout()
-        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.ds_measurement_config = QGroupBox(self.tab_stream)
-        self.ds_measurement_config.setObjectName(u"ds_measurement_config")
-        sizePolicy.setHeightForWidth(self.ds_measurement_config.sizePolicy().hasHeightForWidth())
-        self.ds_measurement_config.setSizePolicy(sizePolicy)
-        self.horizontalLayout_29 = QHBoxLayout(self.ds_measurement_config)
-        self.horizontalLayout_29.setObjectName(u"horizontalLayout_29")
-        self.verticalLayout_12 = QVBoxLayout()
-        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
-        self.ds_continuous = QRadioButton(self.ds_measurement_config)
-        self.ds_continuous.setObjectName(u"ds_continuous")
-        self.ds_continuous.setChecked(True)
-
-        self.verticalLayout_12.addWidget(self.ds_continuous)
-
-        self.ds_fixed_num = QRadioButton(self.ds_measurement_config)
-        self.ds_fixed_num.setObjectName(u"ds_fixed_num")
-        self.ds_fixed_num.setChecked(False)
-
-        self.verticalLayout_12.addWidget(self.ds_fixed_num)
-
-        self.ds_fixed_duration = QRadioButton(self.ds_measurement_config)
-        self.ds_fixed_duration.setObjectName(u"ds_fixed_duration")
-
-        self.verticalLayout_12.addWidget(self.ds_fixed_duration)
-
-
-        self.horizontalLayout_29.addLayout(self.verticalLayout_12)
-
-        self.line_4 = QFrame(self.ds_measurement_config)
-        self.line_4.setObjectName(u"line_4")
-        self.line_4.setFrameShape(QFrame.Shape.VLine)
-        self.line_4.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_29.addWidget(self.line_4)
-
-        self.gridLayout_7 = QGridLayout()
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.ds_num_measurements_label = QLabel(self.ds_measurement_config)
-        self.ds_num_measurements_label.setObjectName(u"ds_num_measurements_label")
-        self.ds_num_measurements_label.setEnabled(False)
-
-        self.gridLayout_7.addWidget(self.ds_num_measurements_label, 1, 0, 1, 1)
-
-        self.ds_num_measurements = QSpinBox(self.ds_measurement_config)
-        self.ds_num_measurements.setObjectName(u"ds_num_measurements")
-        self.ds_num_measurements.setEnabled(False)
-        self.ds_num_measurements.setMinimumSize(QSize(100, 0))
-        self.ds_num_measurements.setMinimum(1)
-        self.ds_num_measurements.setValue(2)
-
-        self.gridLayout_7.addWidget(self.ds_num_measurements, 1, 1, 1, 1)
-
-        self.ds_measurement_pause = QDoubleSpinBox(self.ds_measurement_config)
-        self.ds_measurement_pause.setObjectName(u"ds_measurement_pause")
-        self.ds_measurement_pause.setMinimumSize(QSize(100, 0))
-        self.ds_measurement_pause.setDecimals(6)
-        self.ds_measurement_pause.setMaximum(9999.000000000000000)
-        self.ds_measurement_pause.setSingleStep(0.000001000000000)
-        self.ds_measurement_pause.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
-        self.ds_measurement_pause.setValue(0.010000000000000)
-
-        self.gridLayout_7.addWidget(self.ds_measurement_pause, 2, 1, 1, 1)
-
-        self.label_21 = QLabel(self.ds_measurement_config)
-        self.label_21.setObjectName(u"label_21")
-
-        self.gridLayout_7.addWidget(self.label_21, 2, 0, 1, 1)
-
-        self.ds_duration_label = QLabel(self.ds_measurement_config)
-        self.ds_duration_label.setObjectName(u"ds_duration_label")
-        self.ds_duration_label.setEnabled(False)
-
-        self.gridLayout_7.addWidget(self.ds_duration_label, 0, 0, 1, 1)
-
-        self.ds_duration = QDoubleSpinBox(self.ds_measurement_config)
-        self.ds_duration.setObjectName(u"ds_duration")
-        self.ds_duration.setEnabled(False)
-        self.ds_duration.setMinimumSize(QSize(100, 0))
-        self.ds_duration.setDecimals(6)
-        self.ds_duration.setMaximum(9999.000000000000000)
-        self.ds_duration.setSingleStep(0.000001000000000)
-        self.ds_duration.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
-        self.ds_duration.setValue(10.000000000000000)
-
-        self.gridLayout_7.addWidget(self.ds_duration, 0, 1, 1, 1)
-
-
-        self.horizontalLayout_29.addLayout(self.gridLayout_7)
-
-
-        self.horizontalLayout_17.addWidget(self.ds_measurement_config)
-
-        self.widget = QWidget(self.tab_stream)
-        self.widget.setObjectName(u"widget")
-        self.gridLayout_3 = QGridLayout(self.widget)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.ds_save_data = QPushButton(self.widget)
-        self.ds_save_data.setObjectName(u"ds_save_data")
-        self.ds_save_data.setEnabled(False)
-        self.ds_save_data.setMinimumSize(QSize(100, 30))
-
-        self.gridLayout_3.addWidget(self.ds_save_data, 1, 1, 1, 1)
-
-        self.ds_stream = QPushButton(self.widget)
+        self.widget_3 = QWidget(self.tab_stream)
+        self.widget_3.setObjectName(u"widget_3")
+        self.gridLayout_8 = QGridLayout(self.widget_3)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.ds_stream = QPushButton(self.widget_3)
         self.ds_stream.setObjectName(u"ds_stream")
         self.ds_stream.setEnabled(True)
-        self.ds_stream.setMinimumSize(QSize(100, 30))
 
-        self.gridLayout_3.addWidget(self.ds_stream, 1, 0, 1, 1)
+        self.gridLayout_8.addWidget(self.ds_stream, 1, 0, 1, 1)
 
-        self.ds_plot_settings = QPushButton(self.widget)
+        self.ds_save_data = QPushButton(self.widget_3)
+        self.ds_save_data.setObjectName(u"ds_save_data")
+        self.ds_save_data.setEnabled(False)
+
+        self.gridLayout_8.addWidget(self.ds_save_data, 1, 1, 1, 1)
+
+        self.ds_plot_settings = QPushButton(self.widget_3)
         self.ds_plot_settings.setObjectName(u"ds_plot_settings")
         self.ds_plot_settings.setEnabled(True)
-        self.ds_plot_settings.setMinimumSize(QSize(100, 30))
 
-        self.gridLayout_3.addWidget(self.ds_plot_settings, 1, 2, 1, 1)
+        self.gridLayout_8.addWidget(self.ds_plot_settings, 1, 2, 1, 1)
 
-        self.ds_progress = QProgressBar(self.widget)
+        self.ds_progress = QProgressBar(self.widget_3)
         self.ds_progress.setObjectName(u"ds_progress")
         self.ds_progress.setValue(0)
         self.ds_progress.setTextVisible(False)
 
-        self.gridLayout_3.addWidget(self.ds_progress, 2, 0, 1, 3)
+        self.gridLayout_8.addWidget(self.ds_progress, 2, 0, 1, 3)
 
 
-        self.horizontalLayout_17.addWidget(self.widget)
-
-
-        self.verticalLayout_16.addLayout(self.horizontalLayout_17)
+        self.verticalLayout_16.addWidget(self.widget_3)
 
         self.ds_plot_container = QWidget(self.tab_stream)
         self.ds_plot_container.setObjectName(u"ds_plot_container")
@@ -1104,13 +1119,15 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_connect), QCoreApplication.translate("MainWindow", u"Sourcemeter Connections", None))
         self.sm_metadata.setTitle(QCoreApplication.translate("MainWindow", u"Metadata", None))
         self.label_33.setText(QCoreApplication.translate("MainWindow", u"Step of Process:", None))
-        self.label_34.setText(QCoreApplication.translate("MainWindow", u"Chip #:", None))
-        self.label_35.setText(QCoreApplication.translate("MainWindow", u"Wafer #:", None))
-        self.label_36.setText(QCoreApplication.translate("MainWindow", u"Comments:", None))
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"Light:", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"Wafer #:", None))
         self.sm_dark.setText(QCoreApplication.translate("MainWindow", u"Dark", None))
-        self.dm_light.setText(QCoreApplication.translate("MainWindow", u"Light", None))
+        self.sm_light.setText(QCoreApplication.translate("MainWindow", u"Light", None))
+        self.label_34.setText(QCoreApplication.translate("MainWindow", u"Chip #:", None))
         self.sm_comments.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter a comments here...", None))
+        self.label_36.setText(QCoreApplication.translate("MainWindow", u"Comments:", None))
+        self.sm_data_path_button.setText(QCoreApplication.translate("MainWindow", u"File Output", None))
+        self.sm_data_path.setText(QCoreApplication.translate("MainWindow", u"No data save location specified", None))
         self.sm_quick_measurement.setTitle(QCoreApplication.translate("MainWindow", u"Quick Measurement Parameters", None))
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"Sweep Step Override", None))
         self.sm_quick_measurement_sweep_step.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
@@ -1154,18 +1171,29 @@ class Ui_MainWindow(object):
         self.compliance_label_4.setText(QCoreApplication.translate("MainWindow", u"Compliance", None))
         self.sm_constant_compliance.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
         self.sm_stop.setText(QCoreApplication.translate("MainWindow", u"Stop Measurement", None))
-        self.sm_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Data", None))
+        self.sm_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Last Run", None))
         self.sm_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_sweep), QCoreApplication.translate("MainWindow", u"Sweep Measurement", None))
         self.ds_metadata.setTitle(QCoreApplication.translate("MainWindow", u"Metadata", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", u"Step of Process:", None))
-        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Chip #:", None))
         self.label_38.setText(QCoreApplication.translate("MainWindow", u"Wafer #:", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Comments:", None))
         self.label_40.setText(QCoreApplication.translate("MainWindow", u"Light:", None))
         self.ds_dark.setText(QCoreApplication.translate("MainWindow", u"Dark", None))
         self.ds_light.setText(QCoreApplication.translate("MainWindow", u"Light", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Chip #:", None))
         self.ds_comments.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter a comments here...", None))
+        self.ds_data_path_button.setText(QCoreApplication.translate("MainWindow", u"File Output", None))
+        self.ds_data_path.setText(QCoreApplication.translate("MainWindow", u"No data save location specified", None))
+        self.ds_measurement_config.setTitle(QCoreApplication.translate("MainWindow", u"Measurement Mode", None))
+        self.ds_continuous.setText(QCoreApplication.translate("MainWindow", u"Continuous", None))
+        self.ds_fixed_num.setText(QCoreApplication.translate("MainWindow", u"Fixed number", None))
+        self.ds_fixed_duration.setText(QCoreApplication.translate("MainWindow", u"Fixed duration", None))
+        self.ds_measurement_pause.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
+        self.ds_duration_label.setText(QCoreApplication.translate("MainWindow", u"Total Duration", None))
+        self.ds_duration.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", u"Pause Between Measurements", None))
+        self.ds_num_measurements_label.setText(QCoreApplication.translate("MainWindow", u"Number of Measurements", None))
         self.ds_smu_1_config.setTitle(QCoreApplication.translate("MainWindow", u"SMU 1 Configuration", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter:", None))
         self.smu_select_ds_1.setItemText(0, QCoreApplication.translate("MainWindow", u"Simulated", None))
@@ -1186,17 +1214,8 @@ class Ui_MainWindow(object):
         self.ds_output_2.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
         self.compliance_label_10.setText(QCoreApplication.translate("MainWindow", u"Compliance", None))
         self.ds_compliance_2.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
-        self.ds_measurement_config.setTitle(QCoreApplication.translate("MainWindow", u"Measurement Mode", None))
-        self.ds_continuous.setText(QCoreApplication.translate("MainWindow", u"Continuous", None))
-        self.ds_fixed_num.setText(QCoreApplication.translate("MainWindow", u"Fixed number", None))
-        self.ds_fixed_duration.setText(QCoreApplication.translate("MainWindow", u"Fixed duration", None))
-        self.ds_num_measurements_label.setText(QCoreApplication.translate("MainWindow", u"Number of Measurements", None))
-        self.ds_measurement_pause.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
-        self.label_21.setText(QCoreApplication.translate("MainWindow", u"Pause Between Measurements", None))
-        self.ds_duration_label.setText(QCoreApplication.translate("MainWindow", u"Total Duration", None))
-        self.ds_duration.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
-        self.ds_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Data", None))
         self.ds_stream.setText(QCoreApplication.translate("MainWindow", u"Start Streaming", None))
+        self.ds_save_data.setText(QCoreApplication.translate("MainWindow", u"Save Last Run", None))
         self.ds_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_stream), QCoreApplication.translate("MainWindow", u"Data Streaming", None))
         self.label.setText("")

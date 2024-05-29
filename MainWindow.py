@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMainWindow
 
+from PlotParamsDialog import PlotParam
 from Plot import Plot
 from ui_main_window import Ui_MainWindow
 
@@ -16,6 +17,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.sm_plot_container.layout().addWidget(self.sm_plot)
         
         self.ds_plot = Plot(ds_data, self.ds_plot_container)
+        self.ds_plot.update_plot_params(PlotParam.time, PlotParam.smu_1_current)
         self.ds_plot_container.layout().addWidget(self.ds_plot)
 
 

@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import List
-from PySide6.QtWidgets import QDialog, QRadioButton, QDialogButtonBox, QVBoxLayout, QHBoxLayout, QGroupBox
-from PySide6.QtCore import Signal, Slot
+
 import pandas as pd
+from PySide6.QtCore import Signal, Slot
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QGroupBox, QHBoxLayout, QRadioButton, QVBoxLayout
 
 from ui_plot_params_dialog import Ui_Dialog
 
@@ -142,8 +143,8 @@ if __name__ == "__main__":
 
     import sys
 
-    from PySide6.QtWidgets import QApplication
     import pandas as pd
+    from PySide6.QtWidgets import QApplication
 
     # Create the application instance
     app = QApplication(sys.argv)
