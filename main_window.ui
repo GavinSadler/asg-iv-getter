@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab_connect">
        <attribute name="title">
@@ -951,22 +951,6 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="sm_stop">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>30</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Stop Measurement</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="1">
                <widget class="QPushButton" name="sm_save_data">
                 <property name="enabled">
@@ -983,8 +967,24 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="sm_stop">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Stop Measurement</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="2">
-               <widget class="QPushButton" name="sm_plot_settings">
+               <widget class="QPushButton" name="sm_plot_1_settings">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -995,17 +995,33 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Plot settings</string>
+                 <string>Left Plot</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0" colspan="3">
+              <item row="1" column="0" colspan="2">
                <widget class="QProgressBar" name="sm_progress">
                 <property name="value">
                  <number>0</number>
                 </property>
                 <property name="textVisible">
                  <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QPushButton" name="sm_plot_2_settings">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Right Plot</string>
                 </property>
                </widget>
               </item>
@@ -1017,20 +1033,7 @@
         </item>
         <item>
          <widget class="QWidget" name="sm_plot_container" native="true">
-          <layout class="QVBoxLayout" name="verticalLayout_21">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-          </layout>
+          <layout class="QHBoxLayout" name="horizontalLayout_8"/>
          </widget>
         </item>
        </layout>
@@ -1707,16 +1710,6 @@
         <item>
          <widget class="QWidget" name="widget_3" native="true">
           <layout class="QGridLayout" name="gridLayout_8">
-           <item row="1" column="0">
-            <widget class="QPushButton" name="ds_stream">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="text">
-              <string>Start Streaming</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="1">
             <widget class="QPushButton" name="ds_save_data">
              <property name="enabled">
@@ -1727,17 +1720,37 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QPushButton" name="ds_plot_settings">
+           <item row="1" column="0">
+            <widget class="QPushButton" name="ds_stream">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Plot settings</string>
+              <string>Start Streaming</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" colspan="3">
+           <item row="1" column="2">
+            <widget class="QPushButton" name="ds_plot_1_settings">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>Left Plot</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="ds_plot_2_settings">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>Right Plot</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="4">
             <widget class="QProgressBar" name="ds_progress">
              <property name="value">
               <number>0</number>
@@ -1758,20 +1771,7 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_22">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-          </layout>
+          <layout class="QHBoxLayout" name="horizontalLayout_17"/>
          </widget>
         </item>
        </layout>

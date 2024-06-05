@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import os
 from typing import List
 
@@ -7,6 +7,7 @@ from openpyxl import Workbook, load_workbook
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtWidgets import QComboBox, QDoubleSpinBox, QFileDialog, QMessageBox, QWidget
 
+from Data import write_data
 from MainWindow import MainWindow
 from Measurement import DatastreamMeasurementWorker, DatastreamMode, DatastreamParameters, MeasurementPoint, SweepMeasurementWorker, SweepParameters
 from PlotParamsDialog import PlotParam
@@ -70,7 +71,8 @@ class Controller(QObject):
 
         self.main_window.sm_save_data.clicked.connect(self.sm_save_last_run)
 
-        self.main_window.sm_plot_settings.clicked.connect(self.main_window.sm_plot.show_plot_params_dialog)
+        self.main_window.sm_plot_1_settings.clicked.connect(self.main_window.sm_plot_smu_1.show_plot_params_dialog)
+        self.main_window.sm_plot_2_settings.clicked.connect(self.main_window.sm_plot_smu_2.show_plot_params_dialog)
 
         self.main_window.sm_data_path_button.clicked.connect(self.sm_choose_data_file_path)
 
@@ -86,7 +88,8 @@ class Controller(QObject):
 
         self.main_window.ds_save_data.clicked.connect(self.ds_save_last_run)
 
-        self.main_window.ds_plot_settings.clicked.connect(self.main_window.ds_plot.show_plot_params_dialog)
+        self.main_window.ds_plot_1_settings.clicked.connect(self.main_window.ds_plot_smu_1.show_plot_params_dialog)
+        self.main_window.ds_plot_2_settings.clicked.connect(self.main_window.ds_plot_smu_2.show_plot_params_dialog)
 
         self.main_window.ds_data_path_button.clicked.connect(self.ds_choose_data_file_path)
 
@@ -386,7 +389,8 @@ class Controller(QObject):
             )
         )
 
-        self.main_window.ds_plot.update_data(self.ds_last_run)
+        self.main_window.ds_plot_smu_1.update_data(self.ds_last_run)
+        self.main_window.ds_plot_smu_2.update_data(self.ds_last_run)
 
     @Slot()
     def sm_add_data(self, mp: MeasurementPoint):
@@ -405,7 +409,8 @@ class Controller(QObject):
             )
         )
 
-        self.main_window.sm_plot.update_data(self.sm_last_run[-1])
+        self.main_window.sm_plot_smu_1.update_data(self.sm_last_run[-1])
+        self.main_window.sm_plot_smu_2.update_data(self.sm_last_run[-1])
 
     def disable_all(self, exclude_widgets: List[QWidget] = None):
         # Note the state of the disabled
@@ -456,12 +461,18 @@ class Controller(QObject):
         self._thread_sweep.finished.connect(self.sm_stop_streaming)
         self._thread_sweep.measurement_made.connect(self.sm_add_data)
 
-        # Make sure that when a sweep finshes, we create a new column
+        # Make sure that when a sweep finshes, we create a new column in data and start a new plot
         self._thread_sweep.sweep_complete.connect(lambda: self.sm_last_run.append(initialize_data()))
+        self._thread_sweep.sweep_complete.connect(self.main_window.sm_plot_smu_1.start_new_plot)
+        self._thread_sweep.sweep_complete.connect(self.main_window.sm_plot_smu_2.start_new_plot)
 
         # Disable the measurement buttons
         self.main_window.sm_quick_measurement_run.setEnabled(False)
         self.main_window.sm_measurement_run.setEnabled(False)
+        
+        # Clear the plot from previous runs
+        self.main_window.sm_plot_smu_1.reset()
+        self.main_window.sm_plot_smu_2.reset()
 
         self._thread_sweep.start()
 
@@ -479,10 +490,6 @@ class Controller(QObject):
         self.main_window.sm_stop.setEnabled(False)
 
         self.main_window.sm_save_data.setEnabled(True)
-
-    @Slot()
-    def sm_quick_measurement_run_clicked(self):
-        pass
 
     @Slot()
     def ds_stream_clicked(self):
@@ -516,6 +523,10 @@ class Controller(QObject):
         self.main_window.ds_stream.clicked.connect(self._thread_datastream.stop)
         self.main_window.ds_stream.setText("Stop streaming")
 
+        # Clear the plot from previous stream
+        self.main_window.ds_plot_smu_1.reset()
+        self.main_window.ds_plot_smu_2.reset()
+        
         self._thread_datastream.start()
 
     @Slot()
@@ -555,48 +566,27 @@ class Controller(QObject):
             if self.ds_data_file_path == "":
                 return
 
-        # === Construct the metadata information ===
-
-        # Check to see if we have an excel file already. If so, load it,
-        # otherwise create it
-        if os.path.exists(self.ds_data_file_path):
-            wb = load_workbook(self.ds_data_file_path)
-        else:
-            wb = Workbook()
-
-        # First sheet should be called metadata
-        ws = wb.active
-        ws.title = "Metadata"
-
         light_dark = ""
 
         if self.main_window.ds_light.isChecked():
             light_dark = "light"
         elif self.main_window.ds_dark.isChecked():
             light_dark = "dark"
-
-        ws["A1"] = f"Wafer #: {self.main_window.ds_wafer_num.text()}"
-        ws["A2"] = f"Chip #: {self.main_window.ds_chip_num.text()}"
-        ws["A3"] = f"Step of process: {self.main_window.ds_step_of_process.text()}"
-        ws["A4"] = f"Light/dark: {light_dark}"
-        ws["A5"] = f"Date & time: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}"
-        ws["A6"] = f"Chip #: {self.main_window.ds_chip_num.text()}"
-        ws["A7"] = f"Comments: {self.main_window.ds_comments.toPlainText()}"
-
-        wb.save(self.ds_data_file_path)
-        wb.close()
-
-        # Each measurement has 2 sheets associated with it, data from SMU1 and
-        # data from SMU2. Floor divide to find out which measurement we are on.
-        # We subtract 1 to account for the metadata sheet
-        measurement_number = (len(wb.sheetnames) - 1) // 2
+            
+        metadata = {
+            "Wafer #": self.main_window.ds_wafer_num.text(),
+            "Chip #": self.main_window.ds_chip_num.text(),
+            "Step of Process": self.main_window.ds_step_of_process.text(),
+            "Light/Dark": light_dark,
+            "Date": datetime.now().strftime("%Y-%m-%d"),
+            "Time": datetime.now().strftime("%H:%M:%S"),
+            "Comments": self.main_window.ds_comments.toPlainText(),
+        }
 
         # We need to reset the indexes
         self.ds_last_run = self.ds_last_run.reset_index(drop=True)
 
-        with pd.ExcelWriter(self.ds_data_file_path, mode="a", if_sheet_exists="replace") as writer:
-            self.ds_last_run[["time", "smu_1_voltage", "smu_1_current"]].to_excel(writer, index=False, sheet_name=f"Measurement {measurement_number} - SMU 1")
-            self.ds_last_run[["time", "smu_2_voltage", "smu_2_current"]].to_excel(writer, index=False, sheet_name=f"Measurement {measurement_number} - SMU 2")
+        write_data(self.ds_data_file_path, self.ds_last_run, metadata, include_time=True)
 
         # Reset last run data
         self.ds_last_run = initialize_data()
@@ -613,55 +603,26 @@ class Controller(QObject):
             if self.sm_data_file_path == "":
                 return
 
-        # === Construct the metadata information ===
-
-        # Check to see if we have an excel file already. If so, load it,
-        # otherwise create it
-        if os.path.exists(self.sm_data_file_path):
-            wb = load_workbook(self.sm_data_file_path)
-        else:
-            wb = Workbook()
-
-        # First sheet should be called metadata
-        ws = wb.active
-        ws.title = "Metadata"
-
         light_dark = ""
 
         if self.main_window.sm_light.isChecked():
             light_dark = "light"
         elif self.main_window.sm_dark.isChecked():
             light_dark = "dark"
-
-        ws["A1"] = f"Wafer #: {self.main_window.sm_wafer_num.text()}"
-        ws["A2"] = f"Chip #: {self.main_window.sm_chip_num.text()}"
-        ws["A3"] = f"Step of process: {self.main_window.sm_step_of_process.text()}"
-        ws["A4"] = f"Light/dark: {light_dark}"
-        ws["A5"] = f"Date & time: {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}"
-        ws["A6"] = f"Chip #: {self.main_window.sm_chip_num.text()}"
-        ws["A7"] = f"Comments: {self.main_window.sm_comments.toPlainText()}"
-
-        wb.save(self.sm_data_file_path)
-        wb.close()
-
-        # Each measurement has 2 sheets associated with it, data from SMU1 and
-        # data from SMU2. Floor divide to find out which measurement we are on.
-        # We subtract 1 to account for the metadata sheet
-        measurement_number = (len(wb.sheetnames) - 1) // 2
-
-        with pd.ExcelWriter(self.sm_data_file_path, mode="a", if_sheet_exists="replace") as writer:
-            # The difference with a sweep measurement is that it can have more than
-            # one sweep run, so we need to append all of these runs to the data
-            for sweep in self.sm_last_run:
-
-                # We need to reset the indexes so we can join later
-                sweep = sweep.reset_index(drop=True)
-
-                # Now write the data to the excel sheet
-                sweep[["time", "smu_1_voltage", "smu_1_current"]].to_excel(writer, index=False, sheet_name=f"Measurement {measurement_number} - SMU 1")
-                sweep[["time", "smu_2_voltage", "smu_2_current"]].to_excel(writer, index=False, sheet_name=f"Measurement {measurement_number} - SMU 2")
-
-                measurement_number += 1
+        
+        metadata = {
+            "Wafer #": self.main_window.sm_wafer_num.text(),
+            "Chip #": self.main_window.sm_chip_num.text(),
+            "Step of Process": self.main_window.sm_step_of_process.text(),
+            "Light/Dark": light_dark,
+            "Date": datetime.now().strftime("%Y-%m-%d"),
+            "Time": datetime.now().strftime("%H:%M:%S"),
+            "Comments": self.main_window.sm_comments.toPlainText(),
+        }
+        
+        for run in self.sm_last_run:
+            run.reset_index(drop=True)
+            write_data(self.sm_data_file_path, run, metadata, include_time=False)
 
         # Reset last run data
         self.sm_last_run = [initialize_data()]

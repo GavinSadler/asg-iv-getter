@@ -34,18 +34,24 @@ class Plot(QWidget):
         self._canvas = FigureCanvasQTAgg(self._figure)
 
         layout = QVBoxLayout(self)
-        layout.addWidget(NavigationToolbar2QT(self._canvas))
+        # layout.addWidget(NavigationToolbar2QT(self._canvas))
         layout.addWidget(self._canvas)
 
         (self._line,) = self._axes.plot([], [])
 
         # Update titles
         self.update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
+        
+        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
+        
+        self.refresh()
 
     @Slot()
     def show_plot_params_dialog(self):
-        x, y = PlotParamsDialog(pd.DataFrame(columns=PlotParam.strings()), self, self.x_plot, self.y_plot).get_params()
-        self.update_plot_params(x, y)
+        new_params = PlotParamsDialog(pd.DataFrame(columns=PlotParam.strings()), self, self.x_plot, self.y_plot).get_params()
+        if new_params:
+            x, y = new_params
+            self.update_plot_params(x, y)
 
     @Slot()
     def update_plot_params(self, x: PlotParam, y: PlotParam):
@@ -54,10 +60,10 @@ class Plot(QWidget):
         self._axes.set_xlabel(self.x_plot.name)
         self._axes.set_ylabel(self.y_plot.name)
         self.refresh()
+        self.update_data(self.data)
 
     @Slot()
     def refresh(self):
-        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
         self._figure.tight_layout()
         self._axes.autoscale_view()
         self._axes.relim()
@@ -66,11 +72,27 @@ class Plot(QWidget):
     @Slot()
     def update_data(self, new_data: pd.DataFrame):
         self.data = new_data
+        self._line.set_data(self.data[self.x_plot.name], self.data[self.y_plot.name])
+        self._axes.set_xlabel(self.x_plot.name)
+        self._axes.set_ylabel(self.y_plot.name)
+        self._figure.tight_layout()
+        self._axes.autoscale_view()
+        self._axes.relim()
+        self._canvas.draw()
+    
+    @Slot()
+    def start_new_plot(self):
+        (self._line,) = self._axes.plot([], [])
+    
+    @Slot()
+    def reset(self):
+        self._axes.clear()
+        self.start_new_plot()
         self.refresh()
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.refresh()
+    
+    # def resizeEvent(self, event):
+    #     super().resizeEvent(event)
+    #     self.refresh()
 
 
 if __name__ == "__main__":

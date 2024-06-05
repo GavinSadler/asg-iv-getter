@@ -13,12 +13,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.retranslateUi(self)
 
     def setup_plots(self, ms_data, ds_data):
-        self.sm_plot = Plot(ms_data, self.sm_plot_container)
-        self.sm_plot_container.layout().addWidget(self.sm_plot)
+        self.sm_plot_smu_1 = Plot(ms_data, self.sm_plot_container)
+        self.sm_plot_smu_1.update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
+        self.sm_plot_container.layout().addWidget(self.sm_plot_smu_1)
+        
+        self.sm_plot_smu_2 = Plot(ms_data, self.sm_plot_container)
+        self.sm_plot_smu_2.update_plot_params(PlotParam.smu_2_voltage, PlotParam.smu_2_current)
+        self.sm_plot_container.layout().addWidget(self.sm_plot_smu_2)
 
-        self.ds_plot = Plot(ds_data, self.ds_plot_container)
-        self.ds_plot.update_plot_params(PlotParam.time, PlotParam.smu_1_current)
-        self.ds_plot_container.layout().addWidget(self.ds_plot)
+        self.ds_plot_smu_1 = Plot(ds_data, self.ds_plot_container)
+        self.ds_plot_smu_1.update_plot_params(PlotParam.time, PlotParam.smu_1_current)
+        self.ds_plot_container.layout().addWidget(self.ds_plot_smu_1)
+        
+        self.ds_plot_smu_2 = Plot(ds_data, self.ds_plot_container)
+        self.ds_plot_smu_2.update_plot_params(PlotParam.time, PlotParam.smu_2_current)
+        self.ds_plot_container.layout().addWidget(self.ds_plot_smu_2)
 
 
 if __name__ == "__main__":
