@@ -62,6 +62,15 @@ def write_data(output_file_path: str, new_data: pd.DataFrame, metadata: dict, in
                 writer.book["SMU 2"].cell(row=row_num, column=column_num, value=f"{key}: {value}")
 
 
+def initialize_data():
+    df = pd.DataFrame(columns=["smu_1_voltage", "smu_1_current", "smu_2_voltage", "smu_2_current", "time"])
+
+    for column in df.columns:
+        df[column] = df[column].astype(float)
+
+    return df
+
+
 if __name__ == "__main__":
 
     import random
