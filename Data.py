@@ -1,29 +1,70 @@
+import math
 import os
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
+from PySide6.QtGui import QColor
+import random
 
 import pandas as pd
 
 
-class MeasurementField(Enum):
-    SMU_1_VOLTAGE = 0
-    SMU_1_CURRENT = 1
-    SMU_2_VOLTAGE = 2
-    SMU_2_CURRENT = 3
-    TIME = 4
+@dataclass
+class Metadata:
+    wafer_number: str
+    chip_number: str
+    step_of_process: str
+    light_dark: str
+    date: str
+    time: str
+    comments: str
+
+    smu_1_serial: str = ""
+    smu_2_serial: str = ""
 
 
 @dataclass
-class Measurement:
+class MeasurementPoint:
     smu_1_voltage: float
     smu_1_current: float
     smu_2_voltage: float
     smu_2_current: float
     time: float
 
+class Dataset:
+    data: pd.DataFrame
+    metadata: Metadata
+    color: QColor
+    
+    def initialize(metadata: dict = None):
+        """Returns a Dataset with empty metadata"""
+        if metadata is None:
+            metadata = {}
 
-def write_data(output_file_path: str, new_data: pd.DataFrame, metadata: dict, include_time=True):
+        df = pd.DataFrame(columns=["smu_1_voltage", "smu_1_current", "smu_2_voltage", "smu_2_current", "time"])
+
+        for column in df.columns:
+            df[column] = df[column].astype(float)
+
+        d = Dataset()
+        d.data = df
+        d.metadata = metadata
+        d.color = QColor.fromHsv(360 * random.random(), 255, 255)
+
+        return d
+
+def write_data(output_file_path: str, data: Dataset, include_time=True):
+
+    metadata = [
+        data.metadata.wafer_number,
+        data.metadata.chip_number,
+        data.metadata.step_of_process,
+        data.metadata.light_dark,
+        data.metadata.date,
+        data.metadata.time,
+        data.metadata.comments,
+    ]
+    
+    new_data = data.data
 
     # Write if no file exists, otherwise append to the existing file
     write_mode = "w" if not os.path.exists(output_file_path) else "a"
@@ -57,18 +98,9 @@ def write_data(output_file_path: str, new_data: pd.DataFrame, metadata: dict, in
 
         # This will append the passed metadata information to the last set of columns of the data
         for column_num in range(append_start_column_index, append_start_column_index + columns):
-            for row_num, (key, value) in enumerate(metadata.items(), start=1):
-                writer.book["SMU 1"].cell(row=row_num, column=column_num, value=f"{key}: {value}")
-                writer.book["SMU 2"].cell(row=row_num, column=column_num, value=f"{key}: {value}")
-
-
-def initialize_data():
-    df = pd.DataFrame(columns=["smu_1_voltage", "smu_1_current", "smu_2_voltage", "smu_2_current", "time"])
-
-    for column in df.columns:
-        df[column] = df[column].astype(float)
-
-    return df
+            for row_num, value in enumerate(metadata, start=1):
+                    writer.book["SMU 1"].cell(row=row_num, column=column_num, value=f"{value}")
+                    writer.book["SMU 2"].cell(row=row_num, column=column_num, value=f"{value}")
 
 
 if __name__ == "__main__":

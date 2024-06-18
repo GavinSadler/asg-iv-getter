@@ -1,11 +1,14 @@
+from datetime import datetime
 import json
 import os
 from typing import Dict
 
 from PySide6.QtCore import QRegularExpression, Slot
-from PySide6.QtWidgets import QCheckBox, QDoubleSpinBox, QFileDialog, QMainWindow, QRadioButton, QSpinBox, QWidget
+from PySide6.QtWidgets import QCheckBox, QDoubleSpinBox, QFileDialog, QMainWindow, QRadioButton, QSpinBox, QWidget, QMessageBox
 
+from Data import Metadata
 from Measurement import DatastreamMode, DatastreamParameters, SweepParameters
+from PlotParamsDialog import PlotParam
 from SourceMeter import Source
 from ui_main_window import Ui_MainWindow
 
@@ -29,6 +32,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ds_param_current_1.clicked.connect(self.ds_params_changed)
         self.ds_param_voltage_2.clicked.connect(self.ds_params_changed)
         self.ds_param_current_2.clicked.connect(self.ds_params_changed)
+        self.sm_left_plot_settings.clicked.connect(self.sm_plot_1.show_plot_params_dialog)
+        self.sm_right_plot_settings.clicked.connect(self.sm_plot_2.show_plot_params_dialog)
+        self.ds_left_plot_settings.clicked.connect(self.ds_plot_1.show_plot_params_dialog)
+        self.ds_right_plot_settings.clicked.connect(self.ds_plot_2.show_plot_params_dialog)
 
         # === Sweep parameter configuration change connections ===
         self.sm_param_sweep_voltage.clicked.connect(self.sm_params_changed)
@@ -39,24 +46,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # === Menubar connections ===
         self.menubar_save_configuration.triggered.connect(self.save_configuration)
         self.menubar_load_configuration.triggered.connect(self.load_configuration)
-
-    def setup_plots(self, ms_data, ds_data):
-        # self.sm_plot_smu_1 = Plot(ms_data, self.sm_plot_container)
-        # self.sm_plot_smu_1.update_plot_params(PlotParam.smu_1_voltage, PlotParam.smu_1_current)
-        # self.sm_plot_container.layout().addWidget(self.sm_plot_smu_1)
-
-        # self.sm_plot_smu_2 = Plot(ms_data, self.sm_plot_container)
-        # self.sm_plot_smu_2.update_plot_params(PlotParam.smu_2_voltage, PlotParam.smu_2_current)
-        # self.sm_plot_container.layout().addWidget(self.sm_plot_smu_2)
-
-        # self.ds_plot_smu_1 = Plot(ds_data, self.ds_plot_container)
-        # self.ds_plot_smu_1.update_plot_params(PlotParam.time, PlotParam.smu_1_current)
-        # self.ds_plot_container.layout().addWidget(self.ds_plot_smu_1)
-
-        # self.ds_plot_smu_2 = Plot(ds_data, self.ds_plot_container)
-        # self.ds_plot_smu_2.update_plot_params(PlotParam.time, PlotParam.smu_2_current)
-        # self.ds_plot_container.layout().addWidget(self.ds_plot_smu_2)
-        pass
 
     def get_sweep_parameters(self, quick_measurement=False):
 
@@ -99,6 +88,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ds_param_pause_between_measurements.value(),
             measurement_duration,
             measurement_count,
+        )
+
+    def get_ds_metadata(self):
+        light_dark = ""
+
+        if self.ds_meta_light.isChecked():
+            light_dark = "light"
+        elif self.ds_meta_dark.isChecked():
+            light_dark = "dark"
+
+        return Metadata(
+            self.ds_meta_wafer.text(),
+            self.ds_meta_chip.text(),
+            self.ds_meta_step.text(),
+            light_dark,
+            datetime.now().strftime("%Y-%m-%d"),
+            datetime.now().strftime("%H:%M:%S"),
+            self.ds_meta_comments.toPlainText(),
+            self.ds_smu_1.currentText(),
+            self.ds_smu_2.currentText()
+        )
+
+    def get_sm_metadata(self):
+        light_dark = ""
+
+        if self.sm_meta_light.isChecked():
+            light_dark = "light"
+        elif self.sm_meta_dark.isChecked():
+            light_dark = "dark"
+
+        return Metadata(
+            self.sm_meta_wafer.text(),
+            self.sm_meta_chip.text(),
+            self.sm_meta_step.text(),
+            light_dark,
+            datetime.now().strftime("%Y-%m-%d"),
+            datetime.now().strftime("%H:%M:%S"),
+            self.sm_meta_comments.toPlainText(),
+            self.sm_sweep_smu.currentText(),
+            self.sm_constant_smu.currentText()
         )
 
     @Slot()
@@ -160,11 +189,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         config = {}
 
+        # Params from ui elements
         for p in params:
             if isinstance(p, (QSpinBox, QDoubleSpinBox)):
                 config[p.objectName()] = p.value()
             elif isinstance(p, (QRadioButton, QCheckBox)):
                 config[p.objectName()] = p.isChecked()
+
+        # Plot params
+        config["sm_plot_1.x_param"] = self.sm_plot_1.x_param.name
+        config["sm_plot_1.y_param"] = self.sm_plot_1.y_param.name
+        config["sm_plot_2.x_param"] = self.sm_plot_2.x_param.name
+        config["sm_plot_2.y_param"] = self.sm_plot_2.y_param.name
+        config["ds_plot_1.x_param"] = self.ds_plot_1.x_param.name
+        config["ds_plot_1.y_param"] = self.ds_plot_1.y_param.name
+        config["ds_plot_2.x_param"] = self.ds_plot_2.x_param.name
+        config["ds_plot_2.y_param"] = self.ds_plot_2.y_param.name
 
         # See where the user wants to save the file
         path, _ = QFileDialog(self).getSaveFileName(self, filter="*.json", dir="config_default.json")
@@ -187,19 +227,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.load_configuration_from_file(path)
 
     def load_configuration_from_file(self, file_path: str):
+
         # Read in the values from the file
-        with open(file_path, "r") as fp:
-            config: Dict[str, str | int | float | bool] = json.load(fp)
+        try:
+            with open(file_path, "r") as fp:
+                config: Dict[str, str | int | float | bool] = json.load(fp)
+        except json.JSONDecodeError:
+            QMessageBox(
+                QMessageBox.Icon.Warning,
+                "Warning: Error loading configuration",
+                "It seems like the loaded configuration file is malformed. Default settings will be applied instead.",
+                QMessageBox.StandardButton.Ok,
+                parent=self,
+            ).show()
+            return
 
         # Apply those values
         for object_name, value in config.items():
             c: QWidget = self.findChild(QWidget, object_name)
+
+            # In the event that a non-ui element config option is encountered
+            if c is None:
+                continue
 
             # Different objects have to be treated differently
             if isinstance(c, (QSpinBox, QDoubleSpinBox)):
                 c.setValue(value)
             elif isinstance(c, (QRadioButton, QCheckBox)):
                 c.setChecked(value)
+
+        # Set plot params appropriately. Wrap in a keyerror in the event that these settings don't exist
+        try:
+            self.sm_plot_1.set_plot_parameters(PlotParam(config["sm_plot_1.x_param"]), PlotParam(config["sm_plot_1.y_param"]))
+            self.sm_plot_2.set_plot_parameters(PlotParam(config["sm_plot_2.x_param"]), PlotParam(config["sm_plot_2.y_param"]))
+            self.ds_plot_1.set_plot_parameters(PlotParam(config["ds_plot_1.x_param"]), PlotParam(config["ds_plot_1.y_param"]))
+            self.ds_plot_2.set_plot_parameters(PlotParam(config["ds_plot_2.x_param"]), PlotParam(config["ds_plot_2.y_param"]))
+        except KeyError:
+            pass
+
+    def closeEvent(self, event):
+        # TODO: Check to save before closing
+        event.accept()
+        # do stuff
+        # if self.check_unsaved_data():
+        #     event.accept() # let the window close
+        # else:
+        #     event.ignore()
 
 
 if __name__ == "__main__":

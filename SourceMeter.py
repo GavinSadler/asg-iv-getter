@@ -97,6 +97,16 @@ class SourceMeter:
             self._send_command(b":MEAS:VOLT?")
 
         if not self.simulated:
+            split_items = self._read_input_buffer().decode().strip().split(",")
+            
+            # Just in case the SMU sends back some weird data
+            if len(split_items) < 2:
+                # Send a bunch of junk and clear the input buffer, then reset
+                self._send_command(b"")
+                self._read_input_buffer()
+                self.reset()
+                raise serial.SerialException("Invalid response from SMU")
+            
             voltage_str, current_str = self._read_input_buffer().decode().strip().split(",")
             return (float(voltage_str), float(current_str))
         else:

@@ -2,12 +2,12 @@ from datetime import datetime
 from typing import List
 
 import pandas as pd
-from PySide6.QtCore import QObject, Slot
-from PySide6.QtWidgets import QComboBox, QDoubleSpinBox, QFileDialog, QMessageBox, QWidget
+from PySide6.QtCore import QObject, Slot, Qt
+from PySide6.QtWidgets import QComboBox, QDoubleSpinBox, QFileDialog, QMessageBox, QWidget, QListWidgetItem
 
-from Data import initialize_data, write_data
+from Data import Dataset, MeasurementPoint, write_data
 from MainWindow import MainWindow
-from Measurement import DatastreamMeasurementWorker, MeasurementPoint, SweepMeasurementWorker
+from Measurement import DatastreamMeasurementWorker, SweepMeasurementWorker
 from SourceMeter import ConnectSMUWorker, Source, SourceMeter
 
 
@@ -19,33 +19,30 @@ class Controller(QObject):
     ds_data_file_path: str
     sm_data_file_path: str
 
-    sm_data: pd.DataFrame | None
-    ds_data: pd.DataFrame | None
+    sm_data: List[Dataset]
+    ds_data: List[Dataset]
 
-    sm_last_run: List[pd.DataFrame]
-    ds_last_run: pd.DataFrame
+    sm_last_run: List[Dataset] | None
+    ds_last_run: Dataset | None
 
-    _widget_enabled_state: dict[QWidget, bool]
+    sm_last_measurement_quick_measurement: bool
 
     def __init__(self):
         super().__init__()
 
         # Initialize fields
         self.sourcemeters = []
-        self.sm_data = None
-        self.ds_data = None
-        self.sm_last_run = [initialize_data()]
-        self.ds_last_run = initialize_data()
+        self.sm_data = []
+        self.ds_data = []
+        self.sm_last_run = None
+        self.ds_last_run = None
         self.ds_data_file_path = ""
         self.sm_data_file_path = ""
-        self._widget_enabled_state = {}
+        self.sm_last_measurement_quick_measurement = False
 
         # Create the user interface
         self.main_window = MainWindow()
         self.main_window.show()
-
-        # Setup the plotes
-        self.main_window.setup_plots(self.sm_last_run[-1], self.ds_last_run)
 
         # === SMU Connection Tab ===
         self.main_window.smu_search.clicked.connect(self.smu_search_clicked)
@@ -59,9 +56,6 @@ class Controller(QObject):
 
         self.main_window.sm_save_last_run.clicked.connect(self.sm_save_last_run)
 
-        # self.main_window.sm_plot_1_settings.clicked.connect(self.main_window.sm_plot_smu_1.show_plot_params_dialog)
-        # self.main_window.sm_plot_2_settings.clicked.connect(self.main_window.sm_plot_smu_2.show_plot_params_dialog)
-
         self.main_window.sm_file_output.clicked.connect(self.sm_choose_data_file_path)
 
         # === Datastream tab ===
@@ -69,10 +63,12 @@ class Controller(QObject):
 
         self.main_window.ds_save_last_run.clicked.connect(self.ds_save_last_run)
 
-        # self.main_window.ds_plot_1_settings.clicked.connect(self.main_window.ds_plot_smu_1.show_plot_params_dialog)
-        # self.main_window.ds_plot_2_settings.clicked.connect(self.main_window.ds_plot_smu_2.show_plot_params_dialog)
-
         self.main_window.ds_file_output.clicked.connect(self.ds_choose_data_file_path)
+
+        # === Data tab ===
+        self.main_window.sweep_measurements.itemChanged.connect(self.update_data_plot)
+        self.main_window.datastream_measurements.itemChanged.connect(self.update_data_plot)
+        self.main_window.plot_parameters.clicked.connect(self.main_window.data_plot.show_plot_params_dialog)
 
     @Slot()
     def smu_search_clicked(self):
@@ -190,61 +186,11 @@ class Controller(QObject):
         if smu:
             smu.beep(1000, 0.5)
 
-    def sm_get_smu_1_source(self):
-        return Source.VOLTAGE if self.main_window.sm_voltage_1.isChecked() else Source.CURRENT
-
-    def sm_get_smu_2_source(self):
-        return Source.VOLTAGE if self.main_window.sm_voltage_2.isChecked() else Source.CURRENT
-
-    def ds_get_smu_1_source(self):
-        return Source.VOLTAGE if self.main_window.ds_voltage_1.isChecked() else Source.CURRENT
-
-    def ds_get_smu_2_source(self):
-        return Source.VOLTAGE if self.main_window.ds_voltage_2.isChecked() else Source.CURRENT
-
-    def ds_get_smu_1(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_ds_1.currentText(), True)
-
-    def ds_get_smu_2(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_ds_2.currentText(), True)
-
-    def sm_get_smu_1(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_sm_1.currentText(), True)
-
-    def sm_get_smu_2(self):
-        return self.get_smu_from_serial(self.main_window.smu_select_sm_2.currentText(), True)
-
-    def sm_get_sweep_smu(self):
-        if self.main_window.sm_sweep_1.isChecked():
-            return self.sm_get_smu_1()
-        else:
-            return self.sm_get_smu_2()
-
-    def sm_get_constant_smu(self):
-        if not self.main_window.sm_sweep_1.isChecked():
-            return self.sm_get_smu_1()
-        else:
-            return self.sm_get_smu_2()
-
-    @Slot()
-    def ds_update_mode(self):
-        self.main_window.ds_num_measurements.setDisabled(True)
-        self.main_window.ds_num_measurements_label.setDisabled(True)
-        self.main_window.ds_duration.setDisabled(True)
-        self.main_window.ds_duration_label.setDisabled(True)
-
-        if self.main_window.ds_fixed_duration.isChecked():
-            self.main_window.ds_duration.setDisabled(False)
-            self.main_window.ds_duration_label.setDisabled(False)
-        elif self.main_window.ds_fixed_num.isChecked():
-            self.main_window.ds_num_measurements.setDisabled(False)
-            self.main_window.ds_num_measurements_label.setDisabled(False)
-
     @Slot()
     def ds_add_data(self, mp: MeasurementPoint):
-        self.ds_last_run = pd.concat(
+        self.ds_last_run.data = pd.concat(
             (
-                self.ds_last_run,
+                self.ds_last_run.data,
                 pd.DataFrame(
                     {
                         "smu_1_voltage": [mp.smu_1_voltage],
@@ -257,14 +203,16 @@ class Controller(QObject):
             )
         )
 
-        self.main_window.ds_plot_smu_1.update_data(self.ds_last_run)
-        self.main_window.ds_plot_smu_2.update_data(self.ds_last_run)
+        self.main_window.ds_plot_1.datasets = [self.ds_last_run]
+        self.main_window.ds_plot_2.datasets = [self.ds_last_run]
+        self.main_window.ds_plot_1.refresh()
+        self.main_window.ds_plot_2.refresh()
 
     @Slot()
     def sm_add_data(self, mp: MeasurementPoint):
-        self.sm_last_run[-1] = pd.concat(
+        self.sm_last_run[-1].data = pd.concat(
             (
-                self.sm_last_run[-1],
+                self.sm_last_run[-1].data,
                 pd.DataFrame(
                     {
                         "smu_1_voltage": [mp.smu_1_voltage],
@@ -277,15 +225,16 @@ class Controller(QObject):
             )
         )
 
-        # TODO: Fix plotting stuff
-        self.main_window.sm_plot_1.update_data(self.sm_last_run[-1])
-        self.main_window.sm_plot_2.update_data(self.sm_last_run[-1])
+        self.main_window.sm_plot_1.datasets = self.sm_last_run
+        self.main_window.sm_plot_2.datasets = self.sm_last_run
+        self.main_window.sm_plot_1.refresh()
+        self.main_window.sm_plot_2.refresh()
 
     @Slot()
     def sm_run_measurement(self, quick_measurement=False):
 
         # Show a confirmation if we are about to overwrite data
-        if len(self.sm_last_run[0]) > 0:
+        if self.sm_last_run is not None and not self.sm_last_measurement_quick_measurement:
 
             confirmation_box = QMessageBox(
                 QMessageBox.Icon.Warning,
@@ -298,48 +247,49 @@ class Controller(QObject):
             if confirmation_box.exec() == QMessageBox.StandardButton.Cancel:
                 return
 
-        self.sm_last_run = [initialize_data()]
+        # Used to make sure that we don't bother the user if they're overwriting a quick measurement
+        self.sm_last_measurement_quick_measurement = quick_measurement
 
-        params = self.main_window.get_sweep_parameters(quick_measurement)
+        # Reset the last run field
+        self.sm_last_run = [Dataset.initialize(self.main_window.get_sm_metadata())]
 
+        # Create the sweeping thread
         self._thread_sweep = SweepMeasurementWorker(
-            params,
+            self.main_window.get_sweep_parameters(quick_measurement),
             self.get_smu_from_serial(self.main_window.sm_sweep_smu.currentText()),
             self.get_smu_from_serial(self.main_window.sm_constant_smu.currentText()),
         )
         self._thread_sweep.finished.connect(self.sm_stop_measurement)
         self._thread_sweep.measurement_made.connect(self.sm_add_data)
 
-        # Make sure that when a sweep finshes, we create a new column in data and start a new plot
-        self._thread_sweep.sweep_complete.connect(lambda: self.sm_last_run.append(initialize_data()))
+        # Make sure that when a sweep finshes, we create a new column in data and start new plot curves
+        self._thread_sweep.sweep_complete.connect(lambda: self.sm_last_run.append(Dataset.initialize(self.main_window.get_sm_metadata())))
 
         # Disable/enable all necessary buttons
         c: QWidget
-        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|run|save")):
+        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|sm_run|sm_save|ds_stream")):
             c.setEnabled(False)
 
+        # Enable the stop measurement button and connect it to our thread
         self.main_window.sm_abort.setEnabled(True)
-
-        # TODO: Fix plot stuff
-        self._thread_sweep.sweep_complete.connect(self.main_window.sm_plot_1.start_new_curve)
-        self._thread_sweep.sweep_complete.connect(self.main_window.sm_plot_2.start_new_curve)
+        self.main_window.sm_abort.clicked.connect(self._thread_sweep.stop)
 
         # Clear the plot from previous runs
-        # TODO: Fix plot stuff
         self.main_window.sm_plot_1.reset()
         self.main_window.sm_plot_2.reset()
 
+        # Start the sweep
         self._thread_sweep.start()
-
-        # Enable the stop measurement button and connect it to our thread
-        self.main_window.sm_abort.clicked.connect(self._thread_sweep.stop)
 
     @Slot()
     def sm_stop_measurement(self):
         # Disable/enable all necessary buttons
         c: QWidget
-        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|run|save")):
+        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|sm_run|sm_save|ds_stream")):
             c.setEnabled(True)
+        
+        # Crappy fix for disabling certain buttons in datastream tab
+        self.main_window.ds_params_changed()
 
         self.main_window.sm_abort.setEnabled(False)
 
@@ -347,7 +297,7 @@ class Controller(QObject):
     def ds_stream_clicked(self):
 
         # Show a confirmation if we are about to overwrite data
-        if len(self.ds_last_run) > 0:
+        if self.ds_last_run is not None:
 
             confirmation_box = QMessageBox(
                 QMessageBox.Icon.Warning,
@@ -360,13 +310,21 @@ class Controller(QObject):
             if confirmation_box.exec() == QMessageBox.StandardButton.Cancel:
                 return
 
-        self.ds_last_run = initialize_data()
+        self.ds_last_run = Dataset.initialize(self.main_window.get_ds_metadata())
 
-        params = self.main_window.get_stream_parameters()
+        self._thread_datastream = DatastreamMeasurementWorker(
+            self.main_window.get_stream_parameters(),
+            self.get_smu_from_serial(self.main_window.ds_smu_1.currentText()),
+            self.get_smu_from_serial(self.main_window.ds_smu_2.currentText()),
+        )
 
-        self._thread_datastream = DatastreamMeasurementWorker(params, self.ds_get_smu_1(), self.ds_get_smu_2())
         self._thread_datastream.finished.connect(self.ds_stop_streaming)
         self._thread_datastream.measurement_made.connect(self.ds_add_data)
+
+        # Disable/enable all necessary buttons
+        c: QWidget
+        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|sm_run|ds_save")):
+            c.setEnabled(False)
 
         # Alter stream button connectins and text
         self.main_window.ds_stream.clicked.disconnect()
@@ -374,20 +332,24 @@ class Controller(QObject):
         self.main_window.ds_stream.setText("Stop streaming")
 
         # Clear the plot from previous stream
-        self.main_window.ds_plot_smu_1.reset()
-        self.main_window.ds_plot_smu_2.reset()
+        self.main_window.ds_plot_1.reset()
+        self.main_window.ds_plot_2.reset()
 
         self._thread_datastream.start()
 
     @Slot()
     def ds_stop_streaming(self):
+        # Disable/enable all necessary buttons
+        c: QWidget
+        for c in self.main_window.findChildren(QWidget, QRegularExpression("param|meta|smu|sm_run|ds_save")):
+            c.setEnabled(True)
+        
+        # Crappy fix for disabling certain buttons in datastream tab
+        self.main_window.ds_params_changed()
+
         self.main_window.ds_stream.clicked.disconnect()
         self.main_window.ds_stream.clicked.connect(self.ds_stream_clicked)
         self.main_window.ds_stream.setText("Start streaming")
-
-        self.main_window.ds_save_data.setEnabled(True)
-
-        # self.restore_all_enable_states()
 
     @Slot()
     def ds_choose_data_file_path(self):
@@ -416,31 +378,31 @@ class Controller(QObject):
             if self.ds_data_file_path == "":
                 return
 
-        light_dark = ""
-
-        if self.main_window.ds_light.isChecked():
-            light_dark = "light"
-        elif self.main_window.ds_dark.isChecked():
-            light_dark = "dark"
-
-        metadata = {
-            "Wafer #": self.main_window.ds_wafer_num.text(),
-            "Chip #": self.main_window.ds_chip_num.text(),
-            "Step of Process": self.main_window.ds_step_of_process.text(),
-            "Light/Dark": light_dark,
-            "Date": datetime.now().strftime("%Y-%m-%d"),
-            "Time": datetime.now().strftime("%H:%M:%S"),
-            "Comments": self.main_window.ds_comments.toPlainText(),
-        }
-
         # We need to reset the indexes
-        self.ds_last_run = self.ds_last_run.reset_index(drop=True)
+        self.ds_last_run.data = self.ds_last_run.data.reset_index(drop=True)
 
-        write_data(self.ds_data_file_path, self.ds_last_run, metadata, include_time=True)
+        # Switch out the metadata with new metadata, just in case the user changes it before saving
+        self.ds_last_run.metadata = self.main_window.get_ds_metadata()
+
+        try:
+            write_data(self.ds_data_file_path, self.ds_last_run)
+        except PermissionError:
+            QMessageBox(
+                QMessageBox.Icon.Critical,
+                "Error: Could not save data",
+                f"An error occured when trying to save the last run's data to {self.sm_data_file_path}.\nIt is possible that the file open in another program.",
+                QMessageBox.StandardButton.Ok,
+                parent=self.main_window,
+            ).show()
+            return
+
+        # Store the data here
+        self.ds_data.append(self.ds_last_run)
+        self.update_data_tab()
 
         # Reset last run data
-        self.ds_last_run = initialize_data()
-        self.main_window.ds_save_data.setEnabled(False)
+        self.ds_last_run = None
+        self.main_window.ds_save_last_run.setEnabled(False)
 
     @Slot()
     def sm_save_last_run(self):
@@ -452,31 +414,58 @@ class Controller(QObject):
             # If we rejected choosing a file path, just return at this point
             if self.sm_data_file_path == "":
                 return
+        # TODO: Handle data saving in a more stable way
+        try:
+            for run in self.sm_last_run:
+                run.data.reset_index(drop=True)
+                # Switch out the metadata with new metadata, just in case the user changes it before saving
+                run.metadata = self.main_window.get_sm_metadata()
+                # Save the data from this run in the data variable
+                self.sm_data.append(run)
+                write_data(self.sm_data_file_path, run)
+        except PermissionError:
+            QMessageBox(
+                QMessageBox.Icon.Critical,
+                "Error: Could not save data",
+                f"An error occured when trying to save the last run's data to {self.sm_data_file_path}.\nIt is possible that the file open in another program.",
+                QMessageBox.StandardButton.Ok,
+                parent=self.main_window,
+            ).show()
+            return
 
-        light_dark = ""
-
-        if self.main_window.sm_light.isChecked():
-            light_dark = "light"
-        elif self.main_window.sm_dark.isChecked():
-            light_dark = "dark"
-
-        metadata = {
-            "Wafer #": self.main_window.sm_wafer_num.text(),
-            "Chip #": self.main_window.sm_chip_num.text(),
-            "Step of Process": self.main_window.sm_step_of_process.text(),
-            "Light/Dark": light_dark,
-            "Date": datetime.now().strftime("%Y-%m-%d"),
-            "Time": datetime.now().strftime("%H:%M:%S"),
-            "Comments": self.main_window.sm_comments.toPlainText(),
-        }
-
-        for run in self.sm_last_run:
-            run.reset_index(drop=True)
-            write_data(self.sm_data_file_path, run, metadata, include_time=False)
+        self.update_data_tab()
 
         # Reset last run data
-        self.sm_last_run = [initialize_data()]
-        self.main_window.sm_save_data.setEnabled(False)
+        self.sm_last_run = None
+        self.main_window.sm_save_last_run.setEnabled(False)
+
+    def update_data_plot(self, item: QListWidgetItem):
+
+        if item.checkState() == Qt.CheckState.Checked:
+            self.main_window.data_plot.datasets.append(item.data_reference)
+            self.main_window.data_plot.refresh()
+        elif item.checkState() == Qt.CheckState.Unchecked:
+            self.main_window.data_plot.datasets.remove(item.data_reference)
+            self.main_window.data_plot.refresh()
+
+    def update_data_tab(self):
+        self.main_window.sweep_measurements.clear()
+        self.main_window.datastream_measurements.clear()
+
+        self.main_window.data_plot.datasets = []
+        self.main_window.data_plot.refresh()
+
+        for d in self.sm_data:
+            li = QListWidgetItem(f"{d.metadata.wafer_number} {d.metadata.chip_number} {d.metadata.step_of_process}")
+            li.setCheckState(Qt.CheckState.Unchecked)
+            li.data_reference = d
+            self.main_window.sweep_measurements.addItem(li)
+
+        for d in self.ds_data:
+            li = QListWidgetItem(f"{d.metadata.wafer_number} {d.metadata.chip_number} {d.metadata.step_of_process}")
+            li.setCheckState(Qt.CheckState.Unchecked)
+            li.data_reference = d
+            self.main_window.datastream_measurements.addItem(li)
 
 
 def set_input_mode(input: QDoubleSpinBox, is_step: bool, source: Source):

@@ -5,21 +5,13 @@ from enum import Enum
 import numpy as np
 from PySide6.QtCore import QThread, Signal, Slot
 
+from Data import MeasurementPoint
 from SourceMeter import Source, SourceMeter
 
 
 def sleep(seconds: float):
     """Wrapper around QThread.usleep, gives best sleep accuracy"""
     QThread.usleep(int(seconds * 1000000))
-
-
-@dataclass
-class MeasurementPoint:
-    smu_1_voltage: float
-    smu_1_current: float
-    smu_2_voltage: float
-    smu_2_current: float
-    time: float
 
 
 @dataclass

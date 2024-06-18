@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowBmuhFH.ui'
+## Form generated from reading UI file 'main_windowjuLDrR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (QAbstractScrollArea, QAbstractSpinBox, QApplicati
     QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
     QVBoxLayout, QWidget)
 
-from RealtimePlot import RealtimePlot
+from DataPlot import DataPlot
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -40,8 +40,8 @@ class Ui_MainWindow(object):
         self.menubar_load_configuration.setObjectName(u"menubar_load_configuration")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.horizontalLayout = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.gridLayout_4 = QGridLayout(self.centralwidget)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tab_connect = QWidget()
@@ -195,17 +195,6 @@ class Ui_MainWindow(object):
         self.groupBox_8.setMinimumSize(QSize(425, 0))
         self.gridLayout_9 = QGridLayout(self.groupBox_8)
         self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.sm_file_output_path = QLabel(self.groupBox_8)
-        self.sm_file_output_path.setObjectName(u"sm_file_output_path")
-
-        self.gridLayout_9.addWidget(self.sm_file_output_path, 0, 1, 1, 2)
-
-        self.sm_save_last_run = QPushButton(self.groupBox_8)
-        self.sm_save_last_run.setObjectName(u"sm_save_last_run")
-        self.sm_save_last_run.setEnabled(False)
-
-        self.gridLayout_9.addWidget(self.sm_save_last_run, 1, 0, 1, 1)
-
         self.sm_abort = QPushButton(self.groupBox_8)
         self.sm_abort.setObjectName(u"sm_abort")
         self.sm_abort.setEnabled(False)
@@ -217,17 +206,33 @@ class Ui_MainWindow(object):
 
         self.gridLayout_9.addWidget(self.sm_file_output, 0, 0, 1, 1)
 
-        self.sm_plot_settings = QPushButton(self.groupBox_8)
-        self.sm_plot_settings.setObjectName(u"sm_plot_settings")
+        self.sm_save_last_run = QPushButton(self.groupBox_8)
+        self.sm_save_last_run.setObjectName(u"sm_save_last_run")
+        self.sm_save_last_run.setEnabled(False)
 
-        self.gridLayout_9.addWidget(self.sm_plot_settings, 1, 2, 1, 1)
+        self.gridLayout_9.addWidget(self.sm_save_last_run, 1, 0, 1, 1)
+
+        self.sm_left_plot_settings = QPushButton(self.groupBox_8)
+        self.sm_left_plot_settings.setObjectName(u"sm_left_plot_settings")
+
+        self.gridLayout_9.addWidget(self.sm_left_plot_settings, 2, 0, 1, 1)
 
         self.sm_progress = QProgressBar(self.groupBox_8)
         self.sm_progress.setObjectName(u"sm_progress")
         self.sm_progress.setValue(0)
         self.sm_progress.setTextVisible(False)
 
-        self.gridLayout_9.addWidget(self.sm_progress, 2, 0, 1, 3)
+        self.gridLayout_9.addWidget(self.sm_progress, 3, 0, 1, 2)
+
+        self.sm_file_output_path = QLabel(self.groupBox_8)
+        self.sm_file_output_path.setObjectName(u"sm_file_output_path")
+
+        self.gridLayout_9.addWidget(self.sm_file_output_path, 0, 1, 1, 1)
+
+        self.sm_right_plot_settings = QPushButton(self.groupBox_8)
+        self.sm_right_plot_settings.setObjectName(u"sm_right_plot_settings")
+
+        self.gridLayout_9.addWidget(self.sm_right_plot_settings, 2, 1, 1, 1)
 
 
         self.gridLayout.addWidget(self.groupBox_8, 0, 1, 1, 1)
@@ -490,7 +495,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.groupBox_6, 2, 1, 1, 1)
 
-        self.sm_plot_1 = RealtimePlot(self.tab_sweep_measurement)
+        self.sm_plot_1 = DataPlot(self.tab_sweep_measurement)
         self.sm_plot_1.setObjectName(u"sm_plot_1")
         sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy3.setHorizontalStretch(0)
@@ -500,7 +505,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.sm_plot_1, 3, 0, 1, 1)
 
-        self.sm_plot_2 = RealtimePlot(self.tab_sweep_measurement)
+        self.sm_plot_2 = DataPlot(self.tab_sweep_measurement)
         self.sm_plot_2.setObjectName(u"sm_plot_2")
         sizePolicy3.setHeightForWidth(self.sm_plot_2.sizePolicy().hasHeightForWidth())
         self.sm_plot_2.setSizePolicy(sizePolicy3)
@@ -803,10 +808,22 @@ class Ui_MainWindow(object):
         self.groupBox_14.setMinimumSize(QSize(425, 0))
         self.gridLayout_18 = QGridLayout(self.groupBox_14)
         self.gridLayout_18.setObjectName(u"gridLayout_18")
+        self.ds_file_output = QPushButton(self.groupBox_14)
+        self.ds_file_output.setObjectName(u"ds_file_output")
+
+        self.gridLayout_18.addWidget(self.ds_file_output, 0, 0, 1, 1)
+
+        self.ds_progress = QProgressBar(self.groupBox_14)
+        self.ds_progress.setObjectName(u"ds_progress")
+        self.ds_progress.setValue(0)
+        self.ds_progress.setTextVisible(False)
+
+        self.gridLayout_18.addWidget(self.ds_progress, 3, 0, 1, 2)
+
         self.ds_file_output_path = QLabel(self.groupBox_14)
         self.ds_file_output_path.setObjectName(u"ds_file_output_path")
 
-        self.gridLayout_18.addWidget(self.ds_file_output_path, 0, 1, 1, 2)
+        self.gridLayout_18.addWidget(self.ds_file_output_path, 0, 1, 1, 1)
 
         self.ds_save_last_run = QPushButton(self.groupBox_14)
         self.ds_save_last_run.setObjectName(u"ds_save_last_run")
@@ -820,34 +837,27 @@ class Ui_MainWindow(object):
 
         self.gridLayout_18.addWidget(self.ds_stream, 1, 1, 1, 1)
 
-        self.ds_file_output = QPushButton(self.groupBox_14)
-        self.ds_file_output.setObjectName(u"ds_file_output")
+        self.ds_left_plot_settings = QPushButton(self.groupBox_14)
+        self.ds_left_plot_settings.setObjectName(u"ds_left_plot_settings")
 
-        self.gridLayout_18.addWidget(self.ds_file_output, 0, 0, 1, 1)
+        self.gridLayout_18.addWidget(self.ds_left_plot_settings, 2, 0, 1, 1)
 
-        self.ds_plot_settings = QPushButton(self.groupBox_14)
-        self.ds_plot_settings.setObjectName(u"ds_plot_settings")
+        self.ds_right_plot_settings = QPushButton(self.groupBox_14)
+        self.ds_right_plot_settings.setObjectName(u"ds_right_plot_settings")
 
-        self.gridLayout_18.addWidget(self.ds_plot_settings, 1, 2, 1, 1)
-
-        self.ds_progress = QProgressBar(self.groupBox_14)
-        self.ds_progress.setObjectName(u"ds_progress")
-        self.ds_progress.setValue(0)
-        self.ds_progress.setTextVisible(False)
-
-        self.gridLayout_18.addWidget(self.ds_progress, 2, 0, 1, 3)
+        self.gridLayout_18.addWidget(self.ds_right_plot_settings, 2, 1, 1, 1)
 
 
         self.gridLayout_12.addWidget(self.groupBox_14, 0, 1, 1, 1)
 
-        self.ds_plot_1 = RealtimePlot(self.tab_data_stream)
+        self.ds_plot_1 = DataPlot(self.tab_data_stream)
         self.ds_plot_1.setObjectName(u"ds_plot_1")
         sizePolicy3.setHeightForWidth(self.ds_plot_1.sizePolicy().hasHeightForWidth())
         self.ds_plot_1.setSizePolicy(sizePolicy3)
 
         self.gridLayout_12.addWidget(self.ds_plot_1, 5, 0, 1, 1)
 
-        self.ds_plot_2 = RealtimePlot(self.tab_data_stream)
+        self.ds_plot_2 = DataPlot(self.tab_data_stream)
         self.ds_plot_2.setObjectName(u"ds_plot_2")
         sizePolicy3.setHeightForWidth(self.ds_plot_2.sizePolicy().hasHeightForWidth())
         self.ds_plot_2.setSizePolicy(sizePolicy3)
@@ -857,9 +867,53 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_data_stream, "")
         self.tab_data = QWidget()
         self.tab_data.setObjectName(u"tab_data")
+        self.gridLayout_7 = QGridLayout(self.tab_data)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.data_plot = DataPlot(self.tab_data)
+        self.data_plot.setObjectName(u"data_plot")
+
+        self.gridLayout_7.addWidget(self.data_plot, 0, 0, 1, 2)
+
+        self.groupBox_9 = QGroupBox(self.tab_data)
+        self.groupBox_9.setObjectName(u"groupBox_9")
+        sizePolicy2.setHeightForWidth(self.groupBox_9.sizePolicy().hasHeightForWidth())
+        self.groupBox_9.setSizePolicy(sizePolicy2)
+        self.verticalLayout = QVBoxLayout(self.groupBox_9)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.sweep_measurements = QListWidget(self.groupBox_9)
+        self.sweep_measurements.setObjectName(u"sweep_measurements")
+        self.sweep_measurements.setMaximumSize(QSize(16777215, 200))
+        self.sweep_measurements.setAlternatingRowColors(True)
+
+        self.verticalLayout.addWidget(self.sweep_measurements)
+
+
+        self.gridLayout_7.addWidget(self.groupBox_9, 2, 0, 1, 1)
+
+        self.groupBox_10 = QGroupBox(self.tab_data)
+        self.groupBox_10.setObjectName(u"groupBox_10")
+        sizePolicy2.setHeightForWidth(self.groupBox_10.sizePolicy().hasHeightForWidth())
+        self.groupBox_10.setSizePolicy(sizePolicy2)
+        self.verticalLayout_2 = QVBoxLayout(self.groupBox_10)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.datastream_measurements = QListWidget(self.groupBox_10)
+        self.datastream_measurements.setObjectName(u"datastream_measurements")
+        self.datastream_measurements.setMaximumSize(QSize(16777215, 200))
+        self.datastream_measurements.setAlternatingRowColors(True)
+
+        self.verticalLayout_2.addWidget(self.datastream_measurements)
+
+
+        self.gridLayout_7.addWidget(self.groupBox_10, 2, 1, 1, 1)
+
+        self.plot_parameters = QPushButton(self.tab_data)
+        self.plot_parameters.setObjectName(u"plot_parameters")
+
+        self.gridLayout_7.addWidget(self.plot_parameters, 1, 0, 1, 2)
+
         self.tabWidget.addTab(self.tab_data, "")
 
-        self.horizontalLayout.addWidget(self.tabWidget)
+        self.gridLayout_4.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menuBar = QMenuBar(MainWindow)
@@ -870,10 +924,10 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menuBar)
         QWidget.setTabOrder(self.sm_meta_wafer, self.sm_meta_chip)
         QWidget.setTabOrder(self.sm_meta_chip, self.sm_meta_step)
-        QWidget.setTabOrder(self.sm_meta_step, self.sm_meta_comments)
-        QWidget.setTabOrder(self.sm_meta_comments, self.sm_meta_dark)
+        QWidget.setTabOrder(self.sm_meta_step, self.sm_meta_dark)
         QWidget.setTabOrder(self.sm_meta_dark, self.sm_meta_light)
-        QWidget.setTabOrder(self.sm_meta_light, self.sm_sweep_smu)
+        QWidget.setTabOrder(self.sm_meta_light, self.sm_meta_comments)
+        QWidget.setTabOrder(self.sm_meta_comments, self.sm_sweep_smu)
         QWidget.setTabOrder(self.sm_sweep_smu, self.sm_param_sweep_voltage)
         QWidget.setTabOrder(self.sm_param_sweep_voltage, self.sm_param_sweep_current)
         QWidget.setTabOrder(self.sm_param_sweep_current, self.sm_param_sweep_start)
@@ -893,41 +947,43 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.sm_param_pause_between_sweeps, self.sm_run_quick_measurement)
         QWidget.setTabOrder(self.sm_run_quick_measurement, self.sm_run_full_measurement)
         QWidget.setTabOrder(self.sm_run_full_measurement, self.sm_file_output)
-        QWidget.setTabOrder(self.sm_file_output, self.sm_plot_settings)
-        QWidget.setTabOrder(self.sm_plot_settings, self.sm_abort)
-        QWidget.setTabOrder(self.sm_abort, self.sm_save_last_run)
-        QWidget.setTabOrder(self.sm_save_last_run, self.tabWidget)
-        QWidget.setTabOrder(self.tabWidget, self.smu_disconnect)
-        QWidget.setTabOrder(self.smu_disconnect, self.smu_connection_list)
-        QWidget.setTabOrder(self.smu_connection_list, self.smu_search)
-        QWidget.setTabOrder(self.smu_search, self.smu_identify)
-        QWidget.setTabOrder(self.smu_identify, self.smu_search_log)
-        QWidget.setTabOrder(self.smu_search_log, self.ds_param_fixed_duration)
-        QWidget.setTabOrder(self.ds_param_fixed_duration, self.ds_param_fixed_number)
-        QWidget.setTabOrder(self.ds_param_fixed_number, self.ds_param_duration)
-        QWidget.setTabOrder(self.ds_param_duration, self.ds_param_continuous)
-        QWidget.setTabOrder(self.ds_param_continuous, self.ds_param_pause_between_measurements)
-        QWidget.setTabOrder(self.ds_param_pause_between_measurements, self.ds_param_number_of_measurements)
-        QWidget.setTabOrder(self.ds_param_number_of_measurements, self.ds_meta_comments)
-        QWidget.setTabOrder(self.ds_meta_comments, self.ds_meta_wafer)
-        QWidget.setTabOrder(self.ds_meta_wafer, self.ds_meta_light)
-        QWidget.setTabOrder(self.ds_meta_light, self.ds_meta_dark)
-        QWidget.setTabOrder(self.ds_meta_dark, self.ds_meta_step)
-        QWidget.setTabOrder(self.ds_meta_step, self.ds_meta_chip)
-        QWidget.setTabOrder(self.ds_meta_chip, self.ds_param_current_1)
-        QWidget.setTabOrder(self.ds_param_current_1, self.ds_param_voltage_1)
-        QWidget.setTabOrder(self.ds_param_voltage_1, self.ds_smu_1)
-        QWidget.setTabOrder(self.ds_smu_1, self.ds_param_compliance_1)
-        QWidget.setTabOrder(self.ds_param_compliance_1, self.ds_param_output_1)
-        QWidget.setTabOrder(self.ds_param_output_1, self.ds_param_current_2)
-        QWidget.setTabOrder(self.ds_param_current_2, self.ds_param_voltage_2)
-        QWidget.setTabOrder(self.ds_param_voltage_2, self.ds_smu_2)
-        QWidget.setTabOrder(self.ds_smu_2, self.ds_param_compliance_2)
-        QWidget.setTabOrder(self.ds_param_compliance_2, self.ds_param_output_2)
-        QWidget.setTabOrder(self.ds_param_output_2, self.ds_save_last_run)
+        QWidget.setTabOrder(self.sm_file_output, self.sm_save_last_run)
+        QWidget.setTabOrder(self.sm_save_last_run, self.sm_abort)
+        QWidget.setTabOrder(self.sm_abort, self.sm_left_plot_settings)
+        QWidget.setTabOrder(self.sm_left_plot_settings, self.sm_right_plot_settings)
+        QWidget.setTabOrder(self.sm_right_plot_settings, self.ds_meta_wafer)
+        QWidget.setTabOrder(self.ds_meta_wafer, self.ds_meta_chip)
+        QWidget.setTabOrder(self.ds_meta_chip, self.ds_meta_step)
+        QWidget.setTabOrder(self.ds_meta_step, self.ds_meta_dark)
+        QWidget.setTabOrder(self.ds_meta_dark, self.ds_meta_light)
+        QWidget.setTabOrder(self.ds_meta_light, self.ds_meta_comments)
+        QWidget.setTabOrder(self.ds_meta_comments, self.ds_param_continuous)
+        QWidget.setTabOrder(self.ds_param_continuous, self.ds_param_fixed_number)
+        QWidget.setTabOrder(self.ds_param_fixed_number, self.ds_param_fixed_duration)
+        QWidget.setTabOrder(self.ds_param_fixed_duration, self.ds_param_duration)
+        QWidget.setTabOrder(self.ds_param_duration, self.ds_param_number_of_measurements)
+        QWidget.setTabOrder(self.ds_param_number_of_measurements, self.ds_param_pause_between_measurements)
+        QWidget.setTabOrder(self.ds_param_pause_between_measurements, self.ds_smu_1)
+        QWidget.setTabOrder(self.ds_smu_1, self.ds_param_voltage_1)
+        QWidget.setTabOrder(self.ds_param_voltage_1, self.ds_param_current_1)
+        QWidget.setTabOrder(self.ds_param_current_1, self.ds_param_output_1)
+        QWidget.setTabOrder(self.ds_param_output_1, self.ds_param_compliance_1)
+        QWidget.setTabOrder(self.ds_param_compliance_1, self.ds_smu_2)
+        QWidget.setTabOrder(self.ds_smu_2, self.ds_param_voltage_2)
+        QWidget.setTabOrder(self.ds_param_voltage_2, self.ds_param_current_2)
+        QWidget.setTabOrder(self.ds_param_current_2, self.ds_param_output_2)
+        QWidget.setTabOrder(self.ds_param_output_2, self.ds_param_compliance_2)
+        QWidget.setTabOrder(self.ds_param_compliance_2, self.ds_file_output)
+        QWidget.setTabOrder(self.ds_file_output, self.ds_save_last_run)
         QWidget.setTabOrder(self.ds_save_last_run, self.ds_stream)
-        QWidget.setTabOrder(self.ds_stream, self.ds_file_output)
-        QWidget.setTabOrder(self.ds_file_output, self.ds_plot_settings)
+        QWidget.setTabOrder(self.ds_stream, self.ds_left_plot_settings)
+        QWidget.setTabOrder(self.ds_left_plot_settings, self.ds_right_plot_settings)
+        QWidget.setTabOrder(self.ds_right_plot_settings, self.smu_identify)
+        QWidget.setTabOrder(self.smu_identify, self.smu_connection_list)
+        QWidget.setTabOrder(self.smu_connection_list, self.tabWidget)
+        QWidget.setTabOrder(self.tabWidget, self.smu_disconnect)
+        QWidget.setTabOrder(self.smu_disconnect, self.smu_search)
+        QWidget.setTabOrder(self.smu_search, self.smu_search_log)
 
         self.menuBar.addAction(self.menuTools.menuAction())
         self.menuTools.addAction(self.menubar_sourcemeter_connections)
@@ -937,14 +993,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Dual SMU Controller", None))
         self.menubar_sourcemeter_connections.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter Connections", None))
         self.menubar_save_configuration.setText(QCoreApplication.translate("MainWindow", u"Save Configuration", None))
         self.menubar_load_configuration.setText(QCoreApplication.translate("MainWindow", u"Load Configuration", None))
@@ -964,11 +1020,12 @@ class Ui_MainWindow(object):
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Chip #:", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Comments:", None))
         self.groupBox_8.setTitle(QCoreApplication.translate("MainWindow", u"Data", None))
-        self.sm_file_output_path.setText(QCoreApplication.translate("MainWindow", u"No data save location specified", None))
-        self.sm_save_last_run.setText(QCoreApplication.translate("MainWindow", u"Save Last Run", None))
         self.sm_abort.setText(QCoreApplication.translate("MainWindow", u"Abort Measurement", None))
         self.sm_file_output.setText(QCoreApplication.translate("MainWindow", u"File Output", None))
-        self.sm_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot Settings", None))
+        self.sm_save_last_run.setText(QCoreApplication.translate("MainWindow", u"Save Last Run", None))
+        self.sm_left_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Left Plot Settings", None))
+        self.sm_file_output_path.setText(QCoreApplication.translate("MainWindow", u"No data save location specified", None))
+        self.sm_right_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Left Plot Settings", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Sweep Parameters", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Step", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"End", None))
@@ -980,13 +1037,13 @@ class Ui_MainWindow(object):
         self.sm_param_sweep_current.setText(QCoreApplication.translate("MainWindow", u"Current", None))
         self.sm_sweep_smu.setItemText(0, QCoreApplication.translate("MainWindow", u"Simulated", None))
 
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter:", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter (smu_1):", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Mode:", None))
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"Compliance:", None))
         self.sm_param_sweep_compliance.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Constant Parameters", None))
         self.sm_param_constant_current.setText(QCoreApplication.translate("MainWindow", u"Current", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter:", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Sourcemeter (smu_2):", None))
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"Compliance:", None))
         self.sm_param_constant_voltage.setText(QCoreApplication.translate("MainWindow", u"Voltage", None))
         self.sm_constant_smu.setItemText(0, QCoreApplication.translate("MainWindow", u"Simulated", None))
@@ -1050,12 +1107,16 @@ class Ui_MainWindow(object):
         self.label_72.setText(QCoreApplication.translate("MainWindow", u"Output:", None))
         self.ds_param_output_2.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
         self.groupBox_14.setTitle(QCoreApplication.translate("MainWindow", u"Data", None))
+        self.ds_file_output.setText(QCoreApplication.translate("MainWindow", u"File Output", None))
         self.ds_file_output_path.setText(QCoreApplication.translate("MainWindow", u"No data save location specified", None))
         self.ds_save_last_run.setText(QCoreApplication.translate("MainWindow", u"Save Last Run", None))
         self.ds_stream.setText(QCoreApplication.translate("MainWindow", u"Start Streaming", None))
-        self.ds_file_output.setText(QCoreApplication.translate("MainWindow", u"File Output", None))
-        self.ds_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Plot Settings", None))
+        self.ds_left_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Left Plot Settings", None))
+        self.ds_right_plot_settings.setText(QCoreApplication.translate("MainWindow", u"Right Plot Settings", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_data_stream), QCoreApplication.translate("MainWindow", u"Data Streaming", None))
+        self.groupBox_9.setTitle(QCoreApplication.translate("MainWindow", u"Sweep Measurements", None))
+        self.groupBox_10.setTitle(QCoreApplication.translate("MainWindow", u"Data Stream Measurements", None))
+        self.plot_parameters.setText(QCoreApplication.translate("MainWindow", u"Plot Parameters", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_data), QCoreApplication.translate("MainWindow", u"Data", None))
         self.menuTools.setTitle(QCoreApplication.translate("MainWindow", u"Tools", None))
     # retranslateUi
