@@ -23,12 +23,14 @@ class SweepParameters:
     sweep_compliance: float
 
     constant_source: Source
-    constant_output: float
+    constant_start: float
+    constant_step: float
+    constant_end: float
     constant_compliance: float
 
-    measurement_pause: float
-    sweep_pause: float
-    sweep_count: int
+    pause_between_measurements: float
+    pause_between_sweeps: float
+    test_count: int
 
 
 class DatastreamMode(Enum):
@@ -122,12 +124,18 @@ class DatastreamMeasurementWorker(QThread):
 
 class SweepMeasurementWorker(QThread):
 
-    parameters: SweepParameters
-    sweep_smu: SourceMeter
-    constant_smu: SourceMeter
-
     measurement_made = Signal(MeasurementPoint)
-    sweep_complete = Signal()
+    sweep_complete = Signal(float)
+    test_complete = Signal()
+    
+    constant_supply_now: float
+
+    _parameters: SweepParameters
+    _sweep_smu: SourceMeter
+    _constant_smu: SourceMeter
+
+    _sweep_supply_values: np.ndarray
+    _constant_supply_values: np.ndarray
 
     _stop: bool
 
@@ -136,54 +144,77 @@ class SweepMeasurementWorker(QThread):
 
         self._stop = False
 
-        self.parameters = parameters
-        self.sweep_smu = sweep_smu
-        self.constant_smu = constant_smu
+        self._parameters = parameters
+        self._sweep_smu = sweep_smu
+        self._constant_smu = constant_smu
+
+        # Precalculate the values that will be supplied to the SMUs
+        self._sweep_supply_values = np.arange(
+            self._parameters.sweep_start, self._parameters.sweep_end + self._parameters.sweep_step, self._parameters.sweep_step
+        )
+        self._constant_supply_values = np.arange(
+            self._parameters.constant_start, self._parameters.constant_end + self._parameters.constant_step, self._parameters.constant_step
+        )
+
+        # These variables can be used externally to track what the current constant supply is at
+        self.constant_supply_now = self._constant_supply_values[0]
 
     def run(self):
 
-        num_sweeps = 0
+        # Get the SMUs ready
+        self._sweep_smu.initialize_supply(self._parameters.sweep_source, self._parameters.sweep_compliance)
+        self._constant_smu.initialize_supply(self._parameters.constant_source, self._parameters.constant_compliance)
 
-        while not self._stop:
+        for _ in range(self._parameters.test_count):
 
-            self.sweep()
+            self.test()
 
-            num_sweeps += 1
-            if num_sweeps >= self.parameters.sweep_count or self._stop:
+            if self._stop:
                 break
 
-            # Trigger this after breaking since after breaking we already get a
-            # thread termination signal
-            self.sweep_complete.emit()
-
-            sleep(self.parameters.sweep_pause)
+            sleep(self._parameters.pause_between_sweeps)
 
         # Make sure to turn off SMUs after measurement
-        self.sweep_smu.output_off()
-        self.constant_smu.output_off()
+        self._sweep_smu.output_off()
+        self._constant_smu.output_off()
 
-    def sweep(self):
+    def test(self):
+
+        for constant_output in self._constant_supply_values:
+
+            # Set the constant SMU's supply value
+            self._constant_smu.source(constant_output)
+            
+            # For use in tracking outside of the thread
+            self.constant_supply_now = constant_output
+
+            self.sweep(constant_output)
+
+            if self._stop:
+                return
+
+            sleep(self._parameters.pause_between_sweeps)
+
+        self.test_complete.emit()
+
+    def sweep(self, constant_output: float):
 
         start_time = time.time()
-        supply_values = np.arange(self.parameters.sweep_start, self.parameters.sweep_end + self.parameters.sweep_step, self.parameters.sweep_step)
-        i = 0
 
-        # Get the SMUs ready
-        self.sweep_smu.initialize_supply(self.parameters.sweep_source, self.parameters.sweep_compliance)
-        self.constant_smu.initialize_supply(self.parameters.constant_source, self.parameters.constant_compliance)
+        for sweep_output in self._sweep_supply_values:
 
-        # Set the SMUs to output their respective values
-        self.sweep_smu.source(supply_values[i])
-        self.constant_smu.source(self.parameters.constant_output)
+            if self._stop:
+                return
 
-        # Sleep a bit before taking the first measurement
-        sleep(self.parameters.measurement_pause)
+            # Set the value for the sweep SMU
+            self._sweep_smu.source(sweep_output)
 
-        while not self._stop:
+            # Sleep a bit before taking the first measurement
+            sleep(self._parameters.pause_between_measurements)
 
             # Take our measuremnt
-            sv, sc = self.sweep_smu.measure()
-            cv, cc = self.constant_smu.measure()
+            sv, sc = self._sweep_smu.measure()
+            cv, cc = self._constant_smu.measure()
             t = time.time() - start_time
 
             mp = MeasurementPoint(sv, sc, cv, cc, t)
@@ -191,19 +222,7 @@ class SweepMeasurementWorker(QThread):
             # Notify subscribers
             self.measurement_made.emit(mp)
 
-            # Check to see if we've gone through all of the supplied values
-            i += 1
-            if i >= len(supply_values) or self._stop:
-                break
-
-            # Output new value at sweep
-            self.sweep_smu.source(supply_values[i])
-
-            sleep(self.parameters.measurement_pause)
-
-        # After we finish the sweep, turn off the SMUs
-        self.sweep_smu.output_off()
-        self.constant_smu.output_off()
+        self.sweep_complete.emit(constant_output)
 
     @Slot()
     def stop(self):

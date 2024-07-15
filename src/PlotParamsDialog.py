@@ -1,10 +1,10 @@
 from enum import Enum
 from typing import List
 
-import pandas as pd
 from PySide6.QtWidgets import QDialog, QRadioButton
 
-from ui_plot_params_dialog import Ui_Dialog
+from UserInterface.ui_plot_params_dialog import Ui_Dialog
+
 
 class PlotParam(Enum):
     smu_1_voltage = "smu_1_voltage"
@@ -15,6 +15,7 @@ class PlotParam(Enum):
 
     def strings() -> List[str]:
         return [p.name for p in PlotParam]
+
 
 class PlotParamsDialog(QDialog, Ui_Dialog):
 
@@ -71,7 +72,6 @@ if __name__ == "__main__":
 
     import sys
 
-    import pandas as pd
     from PySide6.QtWidgets import QApplication
 
     # Create the application instance

@@ -1,11 +1,13 @@
+import logging
+import logging.handlers
 import random
 from enum import Enum
 from typing import List
 
+import PySide6.QtCore as QtCore
 import serial
 import serial.serialutil
 import serial.tools.list_ports
-from PySide6.QtCore import QObject, QThread, Signal, Slot
 
 
 class Source(Enum):
@@ -38,7 +40,10 @@ class SourceMeter:
     source_mode: Source
     _conn: serial.Serial
 
-    def __init__(self, device: serial.Serial = None):
+    _tx_logger: logging.Logger
+    _rx_logger: logging.Logger
+
+    def __init__(self, device: serial.Serial = None, serial_number: str = None):
 
         # Chekc if our device is simulated (No valid serial object was passed to the class)
         self.simulated = device is None
@@ -46,6 +51,28 @@ class SourceMeter:
 
         if self.simulated:
             self.serial_number = "SIMULATED"
+
+        if serial_number:
+            self.serial_number = serial_number
+
+        # Only log the serial communications from the PC to the sourcemeters
+        if not self.simulated:
+            logging_format = logging.Formatter("[%(asctime)s] %(message)s")
+
+            self._tx_logger = logging.getLogger(f"tx_{self.serial_number}")
+            tx_handler = logging.handlers.RotatingFileHandler(f"tx_{self.serial_number}.log", "a", 50 * 1024 * 1024, 2)
+            tx_handler.setFormatter(logging_format)
+            self._tx_logger.addHandler(tx_handler)
+            self._tx_logger.setLevel(logging.DEBUG)
+
+            self._rx_logger = logging.getLogger(f"rx_{self.serial_number}")
+            rx_handler = logging.handlers.RotatingFileHandler(f"rx_{self.serial_number}.log", "a", 50 * 1024 * 1024, 2)
+            rx_handler.setFormatter(logging_format)
+            self._rx_logger.addHandler(rx_handler)
+            self._rx_logger.setLevel(logging.DEBUG)
+
+            self._tx_logger.info("=== NEW SESSION ===")
+            self._rx_logger.info("=== NEW SESSION ===")
 
         # Just initialize the supply to supply voltage, initially
         self.reset()
@@ -68,6 +95,8 @@ class SourceMeter:
 
     def initialize_supply(self, supply_source: Source, compliance: float):
         """Sets the SMU supply source and sense parameters, with specified compliance"""
+
+        self.reset()
 
         if supply_source is Source.VOLTAGE:
             self._send_command(b":SOUR:FUNC VOLT")
@@ -98,7 +127,7 @@ class SourceMeter:
 
         if not self.simulated:
             split_items = self._read_input_buffer().decode().strip().split(",")
-            
+
             # Just in case the SMU sends back some weird data
             if len(split_items) < 2:
                 # Send a bunch of junk and clear the input buffer, then reset
@@ -106,8 +135,8 @@ class SourceMeter:
                 self._read_input_buffer()
                 self.reset()
                 raise serial.SerialException("Invalid response from SMU")
-            
-            voltage_str, current_str = self._read_input_buffer().decode().strip().split(",")
+
+            voltage_str, current_str = split_items
             return (float(voltage_str), float(current_str))
         else:
             return (random.random(), random.random())
@@ -123,32 +152,34 @@ class SourceMeter:
         """Sends a command to the serial device, if not in simulation mode."""
         if not self.simulated and self._conn:
 
-            self._conn.write(command)
-
-            if ending != b"":
-                self._conn.write(ending)
+            self._conn.write(command + ending)
+            self._tx_logger.info(command + ending)
 
     def _flush_input_buffer(self):
         """Reads everything in the serial input buffer, if not in simulation mode."""
         if not self.simulated and self._conn:
-            return self._conn.read_all()
+            data = self._conn.read_all()
+            self._rx_logger.info(data)
+            return data
 
     def _read_input_buffer(self):
         """Waits for and reads the next line of the serial input buffer, if not in simulation mode."""
         if not self.simulated and self._conn:
-            return self._conn.read_until()
+            data = self._conn.read_until()
+            self._rx_logger.info(data)
+            return data
 
 
-class ConnectSMUWorker(QThread):
+class ConnectSMUWorker(QtCore.QThread):
 
-    progress_update = Signal(int)
-    status_update = Signal(str)
-    connections_made = Signal(list)
+    progress_update = QtCore.Signal(int)
+    status_update = QtCore.Signal(str)
+    connections_made = QtCore.Signal(list)
 
     _cancel_search: bool
     _timeout: int
 
-    def __init__(self, parent: QObject = None, timeout: int = 1):
+    def __init__(self, parent: QtCore.QObject = None, timeout: int = 1):
         super().__init__(parent)
         self._cancel_search = False
         self._timeout = timeout
@@ -193,8 +224,8 @@ class ConnectSMUWorker(QThread):
 
             # Verify the device is a Keithley device, and
             if b"KEITHLEY INSTRUMENTS INC." in identity:
-                sm = SourceMeter(device)
-                sm.serial_number = identity.split(b",")[2].decode()
+                sn = identity.split(b",")[2].decode()
+                sm = SourceMeter(device, sn)
                 smu_connections.append(sm)
                 self.status_update.emit(f"Port '{port.name}' successfully identified as a valid SMU")
 
@@ -215,7 +246,7 @@ class ConnectSMUWorker(QThread):
         # Add a newline after the search is finished
         self.status_update.emit("")
 
-    @Slot()
+    @QtCore.Slot()
     def cancel_search(self):
         self._cancel_search = True
 
