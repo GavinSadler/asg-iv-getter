@@ -1,8 +1,9 @@
 import logging
 import logging.handlers
 import random
+import time
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 import PySide6.QtCore as QtCore
 import serial
@@ -37,6 +38,7 @@ class SourceMeter:
 
     simulated: bool
     serial_number: str
+    name: Optional[str]
     source_mode: Source
     _conn: serial.Serial
 
@@ -44,6 +46,8 @@ class SourceMeter:
     _rx_logger: logging.Logger
 
     def __init__(self, device: serial.Serial = None, serial_number: str = None):
+
+        self.name = None
 
         # Chekc if our device is simulated (No valid serial object was passed to the class)
         self.simulated = device is None
@@ -143,6 +147,16 @@ class SourceMeter:
 
     def beep(self, frequency: int, time: float):
         self._send_command(f":SYST:BEEP:IMM {frequency}, {time}".encode())
+
+    def display_message(self, message: str):
+        self._send_command(f':DISP:TEXT:DATA "{message}"'.encode())
+        self._send_command(b":DISP:TEXT:STAT 1")
+        time.sleep(3)
+        self._send_command(b":DISP:TEXT:STAT 0")
+
+    def identify(self):
+        self.beep(1000, 0.5)
+        self.display_message("Hello Celeste!")
 
     def output_off(self):
         """Disables SMU power output"""

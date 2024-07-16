@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'smu_search_dialogptNztL.ui'
+## Form generated from reading UI file 'smu_search_dialogtkPOnz.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -26,22 +26,28 @@ class Ui_smu_search_dialog(object):
         self.smu_connections.setObjectName("smu_connections")
         self.gridLayout_2 = QGridLayout(self.smu_connections)
         self.gridLayout_2.setObjectName("gridLayout_2")
+        self.smu_disconnect = QPushButton(self.smu_connections)
+        self.smu_disconnect.setObjectName("smu_disconnect")
+        self.smu_disconnect.setEnabled(False)
+
+        self.gridLayout_2.addWidget(self.smu_disconnect, 1, 0, 1, 1)
+
+        self.connection_list = QListWidget(self.smu_connections)
+        self.connection_list.setObjectName("connection_list")
+
+        self.gridLayout_2.addWidget(self.connection_list, 0, 0, 1, 3)
+
         self.smu_identify = QPushButton(self.smu_connections)
         self.smu_identify.setObjectName("smu_identify")
         self.smu_identify.setEnabled(False)
 
         self.gridLayout_2.addWidget(self.smu_identify, 1, 1, 1, 1)
 
-        self.connection_list = QListWidget(self.smu_connections)
-        self.connection_list.setObjectName("connection_list")
+        self.smu_name = QPushButton(self.smu_connections)
+        self.smu_name.setObjectName("smu_name")
+        self.smu_name.setEnabled(False)
 
-        self.gridLayout_2.addWidget(self.connection_list, 0, 0, 1, 2)
-
-        self.smu_disconnect = QPushButton(self.smu_connections)
-        self.smu_disconnect.setObjectName("smu_disconnect")
-        self.smu_disconnect.setEnabled(False)
-
-        self.gridLayout_2.addWidget(self.smu_disconnect, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.smu_name, 1, 2, 1, 1)
 
         self.gridLayout.addWidget(self.smu_connections, 0, 0, 1, 1)
 
@@ -85,8 +91,9 @@ class Ui_smu_search_dialog(object):
     def retranslateUi(self, smu_search_dialog):
         smu_search_dialog.setWindowTitle(QCoreApplication.translate("smu_search_dialog", "SMU Connections", None))
         self.smu_connections.setTitle(QCoreApplication.translate("smu_search_dialog", "Connections", None))
-        self.smu_identify.setText(QCoreApplication.translate("smu_search_dialog", "Identify", None))
         self.smu_disconnect.setText(QCoreApplication.translate("smu_search_dialog", "Disconnect", None))
+        self.smu_identify.setText(QCoreApplication.translate("smu_search_dialog", "Identify", None))
+        self.smu_name.setText(QCoreApplication.translate("smu_search_dialog", "Name", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("smu_search_dialog", "Connect to Sourcemeters", None))
         self.search.setText(QCoreApplication.translate("smu_search_dialog", "Search for SMUs", None))
 

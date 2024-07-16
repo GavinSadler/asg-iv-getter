@@ -125,9 +125,13 @@ class DatastreamMeasurementWorker(QThread):
 class SweepMeasurementWorker(QThread):
 
     measurement_made = Signal(MeasurementPoint)
+
+    sweep_begin = Signal(float)
     sweep_complete = Signal(float)
+
+    test_began = Signal()
     test_complete = Signal()
-    
+
     constant_supply_now: float
 
     _parameters: SweepParameters
@@ -184,7 +188,7 @@ class SweepMeasurementWorker(QThread):
 
             # Set the constant SMU's supply value
             self._constant_smu.source(constant_output)
-            
+
             # For use in tracking outside of the thread
             self.constant_supply_now = constant_output
 

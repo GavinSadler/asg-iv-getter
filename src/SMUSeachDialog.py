@@ -1,8 +1,9 @@
-from typing import List
+from typing import Dict, List, Optional
 
 import PySide6.QtCore as QtCore
 import PySide6.QtWidgets as QtWidgets
 
+from SMUNameDialog import SMUNameDialog
 from SourceMeter import ConnectSMUWorker, SourceMeter
 from UserInterface.ui_smu_search_dialog import Ui_smu_search_dialog
 
@@ -10,20 +11,31 @@ from UserInterface.ui_smu_search_dialog import Ui_smu_search_dialog
 class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
 
     connections: List[SourceMeter]
+    sourcemeter_names: Dict[str, str]
 
-    def __init__(self, existing_connections: List[SourceMeter] = []):
-        QtWidgets.QDialog.__init__(self)
+    def __init__(
+        self,
+        existing_connections: Optional[List[SourceMeter]] = None,
+        sourcemeter_names: Optional[Dict[str, str]] = None,
+        parent: Optional[QtWidgets.QWidget] = None,
+    ):
+        QtWidgets.QDialog.__init__(self, parent)
         self.setupUi(self)
         self.retranslateUi(self)
 
-        self.connections = existing_connections
+        self.connections = existing_connections or []
+        self.sourcemeter_names = sourcemeter_names or {}
 
         self.search.clicked.connect(self.search_clicked)
         self.connection_list.itemSelectionChanged.connect(self.connection_selection_changed)
+
         self.smu_disconnect.clicked.connect(self.disconnect_clicked)
         self.smu_identify.clicked.connect(self.identify_clicked)
+        self.smu_name.clicked.connect(self.name_clicked)
 
         self.search.clicked.connect(self.search_clicked)
+
+        self.update_list()
 
     def get_sourcemeters(self):
         self.exec()
@@ -70,7 +82,13 @@ class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
         self.connection_list.clear()
 
         for smu in self.connections:
-            self.connection_list.addItem(smu.serial_number)
+
+            if smu.name:
+                label = f"{smu.name} ({smu.serial_number})"
+            else:
+                label = smu.serial_number
+
+            self.connection_list.addItem(label)
 
     @QtCore.Slot()
     def disconnect_all_smus(self):
@@ -88,6 +106,11 @@ class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
         self.disconnect_all_smus()
         self.connections = smus
 
+        # If the sourcemeter has been given a name, make sure to apply it here
+        for smu in self.connections:
+            if smu.serial_number in self.sourcemeter_names.keys():
+                smu.name = self.sourcemeter_names[smu.serial_number]
+
         self.update_list()
 
     def get_smu_from_serial(self, serial: str):
@@ -99,7 +122,14 @@ class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
         if len(self.connection_list.selectedItems()) == 0:
             return None
 
-        serial = self.connection_list.selectedItems()[0].text()
+        text = self.connection_list.selectedItems()[0].text()
+
+        # In the case that there is a paren in the text, there should be an associated name
+        if "(" in text:
+            serial = text.split("(")[1][:-1]
+        else:
+            # Otherwise, the text is the serial
+            serial = text
 
         return self.get_smu_from_serial(serial)
 
@@ -109,6 +139,7 @@ class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
 
         self.smu_disconnect.setDisabled(smu is None)
         self.smu_identify.setDisabled(smu is None)
+        self.smu_name.setDisabled(smu is None)
 
     @QtCore.Slot()
     def disconnect_clicked(self):
@@ -124,7 +155,15 @@ class SMUSearchDialog(QtWidgets.QDialog, Ui_smu_search_dialog):
         smu = self.get_selected_smu()
 
         if smu:
-            smu.beep(1000, 0.5)
+            smu.identify()
+
+    @QtCore.Slot()
+    def name_clicked(self):
+        smu = self.get_selected_smu()
+
+        smu.name = SMUNameDialog(smu.name, self).get_name()
+
+        self.update_list()
 
 
 if __name__ == "__main__":
