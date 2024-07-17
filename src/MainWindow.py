@@ -33,6 +33,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.sm_param_sweep_current.clicked.connect(self.sm_params_changed)
         self.sm_param_constant_voltage.clicked.connect(self.sm_params_changed)
         self.sm_param_constant_current.clicked.connect(self.sm_params_changed)
+        
+        self.sm_params_changed()
+        self.ds_params_changed()
 
     def get_sweep_parameters(self, quick_measurement=False):
 
@@ -50,6 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.sm_param_quick_pause_between_measurements.value() if quick_measurement else self.sm_param_pause_between_measurements.value(),
             self.sm_param_pause_between_sweeps.value(),
             1 if quick_measurement else self.sm_param_number_of_tests.value(),
+            self.sm_param_repeat_sweep.isChecked()
         )
 
     def get_stream_parameters(self):
@@ -137,46 +141,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Change the suffixes for the inputs
         if self.ds_param_voltage_1.isChecked():
-            self.ds_param_output_1.setSuffix(" V")
-            self.ds_param_compliance_1.setSuffix(" A")
+            set_input_mode(self.ds_param_output_1, False, False, Source.VOLTAGE)
+            set_input_mode(self.ds_param_compliance_1, False, True, Source.CURRENT)
         else:
-            self.ds_param_output_1.setSuffix(" A")
-            self.ds_param_compliance_1.setSuffix(" V")
+            set_input_mode(self.ds_param_output_1, False, False, Source.CURRENT)
+            set_input_mode(self.ds_param_compliance_1, False, True, Source.VOLTAGE)
 
         if self.ds_param_voltage_2.isChecked():
-            self.ds_param_output_2.setSuffix(" V")
-            self.ds_param_compliance_2.setSuffix(" A")
+            set_input_mode(self.ds_param_output_2, False, False, Source.VOLTAGE)
+            set_input_mode(self.ds_param_compliance_2, False, True, Source.CURRENT)
         else:
-            self.ds_param_output_2.setSuffix(" A")
-            self.ds_param_compliance_2.setSuffix(" V")
+            set_input_mode(self.ds_param_output_2, False, False, Source.CURRENT)
+            set_input_mode(self.ds_param_compliance_2, False, True, Source.VOLTAGE)
 
     @QtCore.Slot()
     def sm_params_changed(self):
 
         # Change the suffixes for the inputs
         if self.sm_param_constant_voltage.isChecked():
-            self.sm_param_constant_start.setSuffix(" V")
-            self.sm_param_constant_step.setSuffix(" V")
-            self.sm_param_constant_end.setSuffix(" V")
-            self.sm_param_constant_compliance.setSuffix(" A")
+            set_input_mode(self.sm_param_constant_start, False, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_constant_step, True, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_constant_end, False, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_constant_compliance, False, True, Source.CURRENT)
         else:
-            self.sm_param_constant_start.setSuffix(" A")
-            self.sm_param_constant_step.setSuffix(" A")
-            self.sm_param_constant_end.setSuffix(" A")
-            self.sm_param_constant_compliance.setSuffix(" V")
+            set_input_mode(self.sm_param_constant_start, False, False, Source.CURRENT)
+            set_input_mode(self.sm_param_constant_step, True, False, Source.CURRENT)
+            set_input_mode(self.sm_param_constant_end, False, False, Source.CURRENT)
+            set_input_mode(self.sm_param_constant_compliance, False, True, Source.VOLTAGE)
 
         if self.sm_param_sweep_voltage.isChecked():
-            self.sm_param_sweep_start.setSuffix(" V")
-            self.sm_param_sweep_step.setSuffix(" V")
-            self.sm_param_sweep_end.setSuffix(" V")
-            self.sm_param_quick_sweep_step_override.setSuffix(" V")
-            self.sm_param_sweep_compliance.setSuffix(" A")
+            set_input_mode(self.sm_param_sweep_start, False, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_sweep_step, True, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_sweep_end, False, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_quick_sweep_step_override, True, False, Source.VOLTAGE)
+            set_input_mode(self.sm_param_sweep_compliance, False, True, Source.CURRENT)
         else:
-            self.sm_param_sweep_start.setSuffix(" A")
-            self.sm_param_sweep_step.setSuffix(" A")
-            self.sm_param_sweep_end.setSuffix(" A")
-            self.sm_param_quick_sweep_step_override.setSuffix(" A")
-            self.sm_param_sweep_compliance.setSuffix(" V")
+            set_input_mode(self.sm_param_sweep_start, False, False, Source.CURRENT)
+            set_input_mode(self.sm_param_sweep_step, True, False, Source.CURRENT)
+            set_input_mode(self.sm_param_sweep_end, False, False, Source.CURRENT)
+            set_input_mode(self.sm_param_quick_sweep_step_override, True, False, Source.CURRENT)
+            set_input_mode(self.sm_param_sweep_compliance, False, True, Source.VOLTAGE)
 
     def closeEvent(self, event):
         # TODO: Check to save before closing
@@ -187,6 +191,33 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # else:
         #     event.ignore()
 
+def set_input_mode(input: QtWidgets.QDoubleSpinBox, is_step: bool, is_compliance: bool, source: Source):
+
+    if source is Source.VOLTAGE:
+        input.setMaximum(1100)
+        input.setMinimum(-1100)
+        input.setSuffix(" V")
+        input.setDecimals(6)
+        
+        if is_compliance:
+            input.setMaximum(210)
+            input.setMinimum(0)
+        
+        if is_step:
+            input.setMinimum(0.000001)
+            
+    else:
+        input.setMaximum(1000)
+        input.setMinimum(-1000)
+        input.setSuffix(" mA")
+        input.setDecimals(9)
+        
+        if is_compliance:
+            input.setMaximum(1050)
+            input.setMinimum(0)
+
+        if is_step:
+            input.setMinimum(0.000000001)
 
 if __name__ == "__main__":
 

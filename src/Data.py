@@ -65,10 +65,7 @@ class Dataset:
 
     def get_label(self):
 
-        label = f"{self.metadata.get("Wafer #")} {self.metadata.get("Comments")}"
-
-        if self.metadata.get("Constant Supply") is not None and type(self.metadata.get("Constant Supply")) is int:
-            label += f" {self.metadata.get("Constant Supply"):.3f}"
+        label = f"{self.metadata.get("Wafer #")} {self.metadata.get("Comments")} {self.metadata.get("Constant Supply")}"
 
         return label
 

@@ -31,6 +31,7 @@ class SweepParameters:
     pause_between_measurements: float
     pause_between_sweeps: float
     test_count: int
+    repeat_sweep: bool
 
 
 class DatastreamMode(Enum):
@@ -121,18 +122,28 @@ class DatastreamMeasurementWorker(QThread):
     def stop(self):
         self._stop = True
 
+def list_values(start: float, stop: float, step: float):
+    step = abs(step)
+    
+    if start == stop:
+        return np.array([start])
+    
+    if start <= stop:
+        return np.arange(start, stop + step, step)
+    else:
+        return np.arange(start, stop - step, -step)
 
 class SweepMeasurementWorker(QThread):
 
     measurement_made = Signal(MeasurementPoint)
 
     sweep_begin = Signal(float)
-    sweep_complete = Signal(float)
+    sweep_complete = Signal()
+    
+    # test_began = Signal()
+    # test_complete = Signal()
 
-    test_began = Signal()
-    test_complete = Signal()
-
-    constant_supply_now: float
+    # constant_supply_now: float
 
     _parameters: SweepParameters
     _sweep_smu: SourceMeter
@@ -153,12 +164,8 @@ class SweepMeasurementWorker(QThread):
         self._constant_smu = constant_smu
 
         # Precalculate the values that will be supplied to the SMUs
-        self._sweep_supply_values = np.arange(
-            self._parameters.sweep_start, self._parameters.sweep_end + self._parameters.sweep_step, self._parameters.sweep_step
-        )
-        self._constant_supply_values = np.arange(
-            self._parameters.constant_start, self._parameters.constant_end + self._parameters.constant_step, self._parameters.constant_step
-        )
+        self._sweep_supply_values = list_values(self._parameters.sweep_start, self._parameters.sweep_end, self._parameters.sweep_step)
+        self._constant_supply_values = list_values(self._parameters.constant_start, self._parameters.constant_end, self._parameters.constant_step)
 
         # These variables can be used externally to track what the current constant supply is at
         self.constant_supply_now = self._constant_supply_values[0]
@@ -169,41 +176,51 @@ class SweepMeasurementWorker(QThread):
         self._sweep_smu.initialize_supply(self._parameters.sweep_source, self._parameters.sweep_compliance)
         self._constant_smu.initialize_supply(self._parameters.constant_source, self._parameters.constant_compliance)
 
-        for _ in range(self._parameters.test_count):
-
-            self.test()
-
-            if self._stop:
-                break
-
-            sleep(self._parameters.pause_between_sweeps)
+        if self._parameters.repeat_sweep:
+            self.repeat_sweep()
+        else:
+            self.sweep_then_step()
 
         # Make sure to turn off SMUs after measurement
         self._sweep_smu.output_off()
         self._constant_smu.output_off()
 
-    def test(self):
+    def sweep_then_step(self):
+        
+        for _ in range(self._parameters.test_count):
 
+            for constant_output in self._constant_supply_values:
+                
+                # Set the constant SMU's supply value
+                self._constant_smu.source(constant_output)
+                
+                self.sweep(constant_output)
+                    
+                if self._stop:
+                    return
+
+                sleep(self._parameters.pause_between_sweeps)
+    
+    def repeat_sweep(self):
+        
         for constant_output in self._constant_supply_values:
-
+            
             # Set the constant SMU's supply value
             self._constant_smu.source(constant_output)
-
-            # For use in tracking outside of the thread
-            self.constant_supply_now = constant_output
-
-            self.sweep(constant_output)
-
+            
+            for _ in range(self._parameters.test_count):
+                self.sweep(constant_output)
+                
             if self._stop:
                 return
 
             sleep(self._parameters.pause_between_sweeps)
 
-        self.test_complete.emit()
-
     def sweep(self, constant_output: float):
 
         start_time = time.time()
+        
+        self.sweep_begin.emit(constant_output)
 
         for sweep_output in self._sweep_supply_values:
 
@@ -226,7 +243,7 @@ class SweepMeasurementWorker(QThread):
             # Notify subscribers
             self.measurement_made.emit(mp)
 
-        self.sweep_complete.emit(constant_output)
+        self.sweep_complete.emit()
 
     @Slot()
     def stop(self):

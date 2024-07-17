@@ -211,13 +211,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -230,13 +230,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -265,13 +265,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -328,10 +328,10 @@
            <item row="4" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="sm_param_sweep_compliance">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="maximum">
               <double>1000.000000000000000</double>
@@ -432,33 +432,27 @@
            <string>Full Measurement</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="3" column="0" colspan="2">
-            <widget class="QPushButton" name="sm_run_full_measurement">
+           <item row="3" column="1">
+            <widget class="QRadioButton" name="sm_param_repeat_sweep">
              <property name="text">
-              <string>Run Full Measurement</string>
+              <string>Repeat Sweep</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_22">
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_18">
              <property name="text">
-              <string>Number of Tests:</string>
+              <string>Multiple Test Order:</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="sm_param_pause_between_measurements">
-             <property name="suffix">
-              <string> sec</string>
-             </property>
-             <property name="decimals">
-              <number>3</number>
-             </property>
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="stepType">
-              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_26">
+             <property name="text">
+              <string>Pause Between Measurements:</string>
              </property>
             </widget>
            </item>
@@ -469,20 +463,24 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="sm_param_number_of_tests">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="stepType">
-              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
-             </property>
-             <property name="value">
-              <number>1</number>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Number of Tests:</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="3" column="2">
+            <widget class="QRadioButton" name="sm_param_sweep_then_step">
+             <property name="text">
+              <string>Sweep and Step</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="sm_param_pause_between_sweeps">
              <property name="suffix">
               <string> sec</string>
@@ -498,10 +496,42 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_26">
+           <item row="1" column="1" colspan="2">
+            <widget class="QDoubleSpinBox" name="sm_param_pause_between_measurements">
+             <property name="suffix">
+              <string> sec</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="stepType">
+              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QSpinBox" name="sm_param_number_of_tests">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="stepType">
+              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="3">
+            <widget class="QPushButton" name="sm_run_full_measurement">
              <property name="text">
-              <string>Pause Between Measurements:</string>
+              <string>Run Full Measurement</string>
              </property>
             </widget>
            </item>
@@ -598,7 +628,7 @@
            </size>
           </property>
           <property name="title">
-           <string>Constant Parameters</string>
+           <string>Constant Step Parameters</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="1" column="1">
@@ -617,13 +647,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -642,10 +672,10 @@
            <item row="4" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="sm_param_constant_compliance">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="maximum">
               <double>1000.000000000000000</double>
@@ -708,13 +738,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -743,13 +773,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -964,7 +994,7 @@
            <item row="3" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="ds_param_compliance_1">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
               <number>6</number>
@@ -1216,7 +1246,7 @@
            <item row="3" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="ds_param_compliance_2">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
               <number>6</number>

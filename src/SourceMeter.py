@@ -82,6 +82,13 @@ class SourceMeter:
         self.reset()
         self.initialize_supply(Source.VOLTAGE, 0.01)
 
+    def get_label(self):
+        
+        if self.name is not None:
+            return f"{self.name} ({self.serial})"
+        
+        return f"SMU - {self.serial}"
+
     def reset(self):
         """Resets the SMU"""
         if not self.simulated:
@@ -156,7 +163,7 @@ class SourceMeter:
 
     def identify(self):
         self.beep(1000, 0.5)
-        self.display_message("Hello Celeste!")
+        self.display_message(f"Hello! {self.serial_number}")
 
     def output_off(self):
         """Disables SMU power output"""

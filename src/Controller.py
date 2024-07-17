@@ -37,6 +37,7 @@ class Controller(QtCore.QObject):
 
         # Initialize fields
         self.sourcemeters = []
+        self.sourcemeter_names = {}
         self.sm_data = []
         self.ds_data = []
         self.sm_last_run = []
@@ -85,6 +86,11 @@ class Controller(QtCore.QObject):
     def update_smu_uis(self, new_connections: List[SourceMeter]):
 
         self.sourcemeters = new_connections
+        
+        # Apply names to the sourcemeters
+        for smu in self.sourcemeters:
+            if smu.name is None:
+                smu.name = self.sourcemeter_names.get(smu.serial_number)
 
         combo_box: QtWidgets.QComboBox
 
@@ -140,7 +146,7 @@ class Controller(QtCore.QObject):
         d = Dataset()
         d.metadata = self.main_window.get_sm_metadata()
         d.write_time = self.main_window.sm_meta_time_data.isChecked()
-        d.metadata["Constant Supply"] = constant_supply_value
+        d.metadata["Constant Supply"] = f"{constant_supply_value:.3f}"
 
         return d
 
@@ -182,34 +188,13 @@ class Controller(QtCore.QObject):
         )
 
         # Reset the last run field
-        self.sm_last_run = [self.initialize_sm_dataset(sweep_params.constant_start)]
+        self.sm_last_run = []
 
+        # Make all connections to the worker thread
         self._thread_sweep.measurement_made.connect(self.sm_add_data)
-
-        # Make sure that when a sweep finshes, we create a new column in data
-        # and start new plot curves. We need to calculate what the constant
-        # current for this new dataset will be, as well. This is simply what the
-        # current constant current is + whatever step we have set
-        self._thread_sweep.sweep_complete.connect(
-            lambda _: self.sm_last_run.append(self.initialize_sm_dataset(self._thread_sweep.constant_supply_now + sweep_params.constant_step))
-        )
-
-        # ... and add those newly initialized datasets to the plot
-        self._thread_sweep.sweep_complete.connect(lambda _: self.main_window.sm_plot_1.add_dataset(self.sm_last_run[-1]))
-        self._thread_sweep.sweep_complete.connect(lambda _: self.main_window.sm_plot_2.add_dataset(self.sm_last_run[-1]))
-
-        # Super hacky, but when a test finishes, we need to remove the last dataset and re-add it
-        self._thread_sweep.test_complete.connect(lambda: self.sm_last_run.pop())
-        self._thread_sweep.test_complete.connect(lambda: self.main_window.sm_plot_1.remove_last_dataset())
-        self._thread_sweep.test_complete.connect(lambda: self.main_window.sm_plot_2.remove_last_dataset())
-        self._thread_sweep.test_complete.connect(lambda: self.sm_last_run.append(self.initialize_sm_dataset(sweep_params.constant_start)))
-        self._thread_sweep.test_complete.connect(lambda: self.main_window.sm_plot_1.add_dataset(self.sm_last_run[-1]))
-        self._thread_sweep.test_complete.connect(lambda: self.main_window.sm_plot_2.add_dataset(self.sm_last_run[-1]))
-
-        # A bit of a hack, but the line above will create an extra dataset. These line will remove it
-        self._thread_sweep.finished.connect(lambda: self.sm_last_run.pop())
-        self._thread_sweep.finished.connect(lambda: self.main_window.sm_plot_1.remove_last_dataset())
-        self._thread_sweep.finished.connect(lambda: self.main_window.sm_plot_2.remove_last_dataset())
+        self._thread_sweep.sweep_begin.connect(lambda constant_supply_output: self.sm_last_run.append(self.initialize_sm_dataset(constant_supply_output)))
+        self._thread_sweep.sweep_begin.connect(lambda _: self.main_window.sm_plot_1.add_dataset(self.sm_last_run[-1]))
+        self._thread_sweep.sweep_begin.connect(lambda _: self.main_window.sm_plot_2.add_dataset(self.sm_last_run[-1]))
 
         self._thread_sweep.finished.connect(self.sm_stop_measurement)
 
@@ -225,10 +210,6 @@ class Controller(QtCore.QObject):
         # Clear the plot from previous runs
         self.main_window.sm_plot_1.reset()
         self.main_window.sm_plot_2.reset()
-
-        # Add the new datasets to the plots
-        self.main_window.sm_plot_1.add_dataset(self.sm_last_run[-1])
-        self.main_window.sm_plot_2.add_dataset(self.sm_last_run[-1])
 
         # Start the sweep
         self._thread_sweep.start()
@@ -580,20 +561,6 @@ class Controller(QtCore.QObject):
         self.sourcemeter_names = config.get("sourcemeter_names") or {}
 
 
-def set_input_mode(input: QtWidgets.QDoubleSpinBox, is_step: bool, source: Source):
-
-    if source is Source.VOLTAGE:
-        input.setMaximum(21)
-        input.setMinimum(-21)
-        input.setSuffix(" V")
-    else:
-        input.setMaximum(1.05)
-        input.setMinimum(-1.05)
-        input.setSuffix(" A")
-
-    if is_step:
-        input.setMinimum(0.000001)
-
 
 if __name__ == "__main__":
 
@@ -607,7 +574,7 @@ if __name__ == "__main__":
     controller = Controller()
 
     # This will attempt to connect to the SMUs on launch
-    smu_connection_worker = ConnectSMUWorker(controller)
+    smu_connection_worker = ConnectSMUWorker(controller)    
     smu_connection_worker.connections_made.connect(controller.update_smu_uis)
     smu_connection_worker.start()
 

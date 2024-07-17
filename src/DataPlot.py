@@ -5,7 +5,6 @@ import pyqtgraph as pg
 from Data import Dataset
 from PlotParamsDialog import PlotParam, PlotParamsDialog
 
-# pg.setConfigOptions(antialias=True)
 pg.setConfigOptions(antialias=True, background="w", foreground="k")
 
 
