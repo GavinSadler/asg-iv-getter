@@ -122,16 +122,18 @@ class DatastreamMeasurementWorker(QThread):
     def stop(self):
         self._stop = True
 
+
 def list_values(start: float, stop: float, step: float):
     step = abs(step)
-    
+
     if start == stop:
         return np.array([start])
-    
+
     if start <= stop:
         return np.arange(start, stop + step, step)
     else:
         return np.arange(start, stop - step, -step)
+
 
 class SweepMeasurementWorker(QThread):
 
@@ -139,7 +141,7 @@ class SweepMeasurementWorker(QThread):
 
     sweep_begin = Signal(float)
     sweep_complete = Signal()
-    
+
     # test_began = Signal()
     # test_complete = Signal()
 
@@ -186,31 +188,31 @@ class SweepMeasurementWorker(QThread):
         self._constant_smu.output_off()
 
     def sweep_then_step(self):
-        
+
         for _ in range(self._parameters.test_count):
 
             for constant_output in self._constant_supply_values:
-                
+
                 # Set the constant SMU's supply value
                 self._constant_smu.source(constant_output)
-                
+
                 self.sweep(constant_output)
-                    
+
                 if self._stop:
                     return
 
                 sleep(self._parameters.pause_between_sweeps)
-    
+
     def repeat_sweep(self):
-        
+
         for constant_output in self._constant_supply_values:
-            
+
             # Set the constant SMU's supply value
             self._constant_smu.source(constant_output)
-            
+
             for _ in range(self._parameters.test_count):
                 self.sweep(constant_output)
-                
+
             if self._stop:
                 return
 
@@ -219,7 +221,7 @@ class SweepMeasurementWorker(QThread):
     def sweep(self, constant_output: float):
 
         start_time = time.time()
-        
+
         self.sweep_begin.emit(constant_output)
 
         for sweep_output in self._sweep_supply_values:

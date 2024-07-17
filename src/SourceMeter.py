@@ -83,10 +83,10 @@ class SourceMeter:
         self.initialize_supply(Source.VOLTAGE, 0.01)
 
     def get_label(self):
-        
+
         if self.name is not None:
             return f"{self.name} ({self.serial})"
-        
+
         return f"SMU - {self.serial}"
 
     def reset(self):

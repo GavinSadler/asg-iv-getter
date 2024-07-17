@@ -11,11 +11,10 @@ from MainWindow import MainWindow
 from Measurement import DatastreamMeasurementWorker, SweepMeasurementWorker
 from PlotParamsDialog import PlotParam
 from SMUSeachDialog import SMUSearchDialog
-from SourceMeter import ConnectSMUWorker, Source, SourceMeter
+from SourceMeter import ConnectSMUWorker, SourceMeter
 
 
 class Controller(QtCore.QObject):
-
     sourcemeters: List[SourceMeter]
     sourcemeter_names: Dict[str, str]
 
@@ -86,7 +85,7 @@ class Controller(QtCore.QObject):
     def update_smu_uis(self, new_connections: List[SourceMeter]):
 
         self.sourcemeters = new_connections
-        
+
         # Apply names to the sourcemeters
         for smu in self.sourcemeters:
             if smu.name is None:
@@ -375,7 +374,6 @@ class Controller(QtCore.QObject):
                 self.sm_data_file_path, mode=write_mode, if_sheet_exists=("overlay" if write_mode == "a" else None), engine="openpyxl"
             ) as writer:
                 for run in self.sm_last_run:
-
                     # Update the metadata - its possible that the user updated the data
                     run.metadata.update(self.main_window.get_sm_metadata())
                     run.write_time = self.main_window.sm_meta_time_data.isChecked()
@@ -561,9 +559,7 @@ class Controller(QtCore.QObject):
         self.sourcemeter_names = config.get("sourcemeter_names") or {}
 
 
-
 if __name__ == "__main__":
-
     import sys
 
     from PySide6.QtWidgets import QApplication
@@ -574,7 +570,7 @@ if __name__ == "__main__":
     controller = Controller()
 
     # This will attempt to connect to the SMUs on launch
-    smu_connection_worker = ConnectSMUWorker(controller)    
+    smu_connection_worker = ConnectSMUWorker(controller)
     smu_connection_worker.connections_made.connect(controller.update_smu_uis)
     smu_connection_worker.start()
 

@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.sm_param_sweep_current.clicked.connect(self.sm_params_changed)
         self.sm_param_constant_voltage.clicked.connect(self.sm_params_changed)
         self.sm_param_constant_current.clicked.connect(self.sm_params_changed)
-        
+
         self.sm_params_changed()
         self.ds_params_changed()
 
@@ -53,7 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.sm_param_quick_pause_between_measurements.value() if quick_measurement else self.sm_param_pause_between_measurements.value(),
             self.sm_param_pause_between_sweeps.value(),
             1 if quick_measurement else self.sm_param_number_of_tests.value(),
-            self.sm_param_repeat_sweep.isChecked()
+            self.sm_param_repeat_sweep.isChecked(),
         )
 
     def get_stream_parameters(self):
@@ -191,6 +191,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # else:
         #     event.ignore()
 
+
 def set_input_mode(input: QtWidgets.QDoubleSpinBox, is_step: bool, is_compliance: bool, source: Source):
 
     if source is Source.VOLTAGE:
@@ -198,26 +199,27 @@ def set_input_mode(input: QtWidgets.QDoubleSpinBox, is_step: bool, is_compliance
         input.setMinimum(-1100)
         input.setSuffix(" V")
         input.setDecimals(6)
-        
+
         if is_compliance:
             input.setMaximum(210)
             input.setMinimum(0)
-        
+
         if is_step:
             input.setMinimum(0.000001)
-            
+
     else:
         input.setMaximum(1000)
         input.setMinimum(-1000)
         input.setSuffix(" mA")
         input.setDecimals(9)
-        
+
         if is_compliance:
             input.setMaximum(1050)
             input.setMinimum(0)
 
         if is_step:
             input.setMinimum(0.000000001)
+
 
 if __name__ == "__main__":
 
