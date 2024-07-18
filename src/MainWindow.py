@@ -39,17 +39,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def get_sweep_parameters(self, quick_measurement=False):
 
+        sweep_compliance_multiplier = 10**-3 if self.sm_param_sweep_voltage.isChecked() else 1
+        constant_compliance_multiplier = 10**-3 if self.sm_param_constant_voltage.isChecked() else 1
+
         return SweepParameters(
             Source.VOLTAGE if self.sm_param_sweep_voltage.isChecked() else Source.CURRENT,
             self.sm_param_sweep_start.value(),
             self.sm_param_quick_sweep_step_override.value() if quick_measurement else self.sm_param_sweep_step.value(),
             self.sm_param_sweep_end.value(),
-            self.sm_param_sweep_compliance.value(),
+            self.sm_param_sweep_compliance.value() * sweep_compliance_multiplier,
             Source.VOLTAGE if self.sm_param_constant_voltage.isChecked() else Source.CURRENT,
             self.sm_param_constant_start.value(),
             self.sm_param_constant_step.value(),
             self.sm_param_constant_end.value(),
-            self.sm_param_constant_compliance.value(),
+            self.sm_param_constant_compliance.value() * constant_compliance_multiplier,
             self.sm_param_quick_pause_between_measurements.value() if quick_measurement else self.sm_param_pause_between_measurements.value(),
             self.sm_param_pause_between_sweeps.value(),
             1 if quick_measurement else self.sm_param_number_of_tests.value(),

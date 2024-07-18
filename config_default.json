@@ -44,5 +44,8 @@
         "data_plot.x_param": "smu_1_voltage",
         "data_plot.y_param": "smu_1_current"
     },
-    "sourcemeter_names": {}
+    "sourcemeter_names": {
+        "1212298": "Bottom",
+        "1361980": "Top"
+    }
 }

@@ -77,6 +77,12 @@ class Controller(QtCore.QObject):
         self.main_window.menubar_save_configuration.triggered.connect(self.save_configuration)
         self.main_window.menubar_load_configuration.triggered.connect(self.load_configuration)
 
+        # === SMU combo box change connections ===
+        # self.main_window.sm_sweep_smu_select.connect(self.update_plot_labels())
+        # self.main_window.sm_constant_smu_select.connect(self.update_plot_labels)
+        # self.main_window.ds_smu_select_1.connect(self.update_plot_labels)
+        # self.main_window.ds_smu_select_2.connect(self.update_plot_labels)
+
         # Load in default configuration
         if os.path.exists("config_default.json"):
             self.load_configuration_from_file("config_default.json")
@@ -100,13 +106,7 @@ class Controller(QtCore.QObject):
                 combo_box.addItem("Simulated")
 
                 for smu in self.sourcemeters:
-
-                    if smu.name:
-                        label = f"{smu.name} ({smu.serial_number})"
-                    else:
-                        label = smu.serial_number
-
-                    combo_box.addItem(label)
+                    combo_box.addItem(smu.get_label())
 
     def get_smu_from_label(self, label: str, allow_simulated=True):
         for smu in self.sourcemeters:
@@ -371,7 +371,7 @@ class Controller(QtCore.QObject):
             write_mode = "w" if not os.path.exists(self.sm_data_file_path) else "a"
 
             with pd.ExcelWriter(
-                self.sm_data_file_path, mode=write_mode, if_sheet_exists=("overlay" if write_mode == "a" else None), engine="openpyxl"
+                self.sm_data_file_path, mode=write_mode, if_sheet_exists=("overlay" if write_mode == "a" else None)
             ) as writer:
                 for run in self.sm_last_run:
                     # Update the metadata - its possible that the user updated the data
@@ -386,7 +386,7 @@ class Controller(QtCore.QObject):
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Error: Could not save data",
-                f"An error occured when trying to save the last run's data to {self.sm_data_file_path}.\nIt is possible that the file open in another program.",
+                f"An error occurred when trying to save the last run's data to {self.sm_data_file_path}.\nIt is possible that the file open in another program.",
                 QtWidgets.QMessageBox.StandardButton.Ok,
                 parent=self.main_window,
             ).show()
@@ -558,6 +558,21 @@ class Controller(QtCore.QObject):
         # Load in sourcemeter names
         self.sourcemeter_names = config.get("sourcemeter_names") or {}
 
+    def update_plot_labels(self):
+
+        return
+
+        sweep = self.get_smu_from_label(self.main_window.sm_sweep_smu_select.currentText()).get_label()
+        constant = self.get_smu_from_label(self.main_window.sm_constant_smu_select.currentText()).get_label()
+        ds1 = self.get_smu_from_label(self.main_window.ds_smu_select_1.currentText()).get_label()
+        ds2 = self.get_smu_from_label(self.main_window.ds_smu_select_2.currentText()).get_label()
+
+        x = self.main_window.sm_plot_1.update_labels()
+
+        self.main_window.sm_plot_1.update_labels(sweep, constant)
+        self.main_window.sm_plot_2.update_labels(sweep, constant)
+        self.main_window.ds_plot_1.update_labels(ds1, ds2)
+        self.main_window.ds_plot_2.update_labels(ds1, ds2)
 
 if __name__ == "__main__":
     import sys

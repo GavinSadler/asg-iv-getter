@@ -7,7 +7,6 @@ from PlotParamsDialog import PlotParam, PlotParamsDialog
 
 pg.setConfigOptions(antialias=True, background="w", foreground="k")
 
-
 class DataPlot(pg.GraphicsLayoutWidget):
 
     plot_item: pg.PlotItem
@@ -17,6 +16,9 @@ class DataPlot(pg.GraphicsLayoutWidget):
     x_param: PlotParam
     y_param: PlotParam
 
+    smu_1_name: str
+    smu_2_name: str
+
     datasets: List[Dataset]
 
     def __init__(self, parent=None):
@@ -25,6 +27,10 @@ class DataPlot(pg.GraphicsLayoutWidget):
         self.curves = []
 
         self.plot_item = self.addPlot(0, 0)
+        self.plot_item.getAxis("left").enableAutoSIPrefix(True)
+        self.plot_item.getAxis("bottom").enableAutoSIPrefix(True)
+        self.plot_item.getAxis("top").enableAutoSIPrefix(True)
+        self.plot_item.getAxis("right").enableAutoSIPrefix(True)
 
         self.legend = pg.LegendItem()
         self.legend.setBrush(pg.mkBrush(255, 255, 255, int(0.9 * 255)))
@@ -82,8 +88,23 @@ class DataPlot(pg.GraphicsLayoutWidget):
         self.x_param = x_param
         self.y_param = y_param
 
-        self.plot_item.setLabel(axis="bottom", text=x_param.name)
-        self.plot_item.setLabel(axis="left", text=y_param.name)
+        # Determine what unit to show on the graph axis
+        x_unit = "A"
+
+        if self.x_param == PlotParam.time:
+            x_unit = "s"
+        elif self.x_param in [PlotParam.smu_1_voltage, PlotParam.smu_2_voltage]:
+            x_unit = "V"
+
+        y_unit = "A"
+
+        if self.y_param == PlotParam.time:
+            y_unit = "s"
+        elif self.y_param in [PlotParam.smu_1_voltage, PlotParam.smu_2_voltage]:
+            y_unit = "V"
+
+        self.plot_item.setLabel(axis="bottom", text=x_param.name, units=x_unit)
+        self.plot_item.setLabel(axis="left", text=y_param.name, units=y_unit)
 
         self.refresh_all()
 

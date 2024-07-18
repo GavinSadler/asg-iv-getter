@@ -115,9 +115,10 @@ class Dataset:
         smu_1_data = pd.DataFrame(smu_1_data).reset_index(drop=True)
         smu_2_data = pd.DataFrame(smu_2_data).reset_index(drop=True)
 
-        # For some reason, startcol in the below context starts at 0 rather than 1, like the rest of the excel libraries? Weird...
-        smu_1_data.to_excel(writer, sheet_name="SMU 1", index=None, startrow=len(self.metadata), startcol=append_start_column_index - 1)
-        smu_2_data.to_excel(writer, sheet_name="SMU 2", index=None, startrow=len(self.metadata), startcol=append_start_column_index - 1)
+        # For some reason, startcol in the below context starts at 0 rather than 1, like the rest of the Excel
+        # libraries? Weird...
+        smu_1_data.to_excel(writer, sheet_name="SMU 1", index=False, startrow=len(self.metadata), startcol=append_start_column_index - 1)
+        smu_2_data.to_excel(writer, sheet_name="SMU 2", index=False, startrow=len(self.metadata), startcol=append_start_column_index - 1)
 
         # This will append the passed metadata information to the last set of columns of the data
         for column_num in range(append_start_column_index, append_start_column_index + num_columns):

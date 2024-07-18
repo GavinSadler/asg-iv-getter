@@ -37,7 +37,7 @@ def encode_float(f: float):
 class SourceMeter:
 
     simulated: bool
-    serial_number: str
+    serial_number: Optional[str]
     name: Optional[str]
     source_mode: Source
     _conn: serial.Serial
@@ -45,11 +45,11 @@ class SourceMeter:
     _tx_logger: logging.Logger
     _rx_logger: logging.Logger
 
-    def __init__(self, device: serial.Serial = None, serial_number: str = None):
+    def __init__(self, device: serial.Serial = None, serial_number: Optional[str] = None):
 
         self.name = None
 
-        # Chekc if our device is simulated (No valid serial object was passed to the class)
+        # Check if our device is simulated (No valid serial object was passed to the class)
         self.simulated = device is None
         self._conn = device
 
@@ -85,9 +85,9 @@ class SourceMeter:
     def get_label(self):
 
         if self.name is not None:
-            return f"{self.name} ({self.serial})"
+            return f"{self.name} ({self.serial_number})"
 
-        return f"SMU - {self.serial}"
+        return f"SMU - {self.serial_number}"
 
     def reset(self):
         """Resets the SMU"""

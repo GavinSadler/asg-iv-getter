@@ -142,11 +142,6 @@ class SweepMeasurementWorker(QThread):
     sweep_begin = Signal(float)
     sweep_complete = Signal()
 
-    # test_began = Signal()
-    # test_complete = Signal()
-
-    # constant_supply_now: float
-
     _parameters: SweepParameters
     _sweep_smu: SourceMeter
     _constant_smu: SourceMeter
@@ -235,7 +230,7 @@ class SweepMeasurementWorker(QThread):
             # Sleep a bit before taking the first measurement
             sleep(self._parameters.pause_between_measurements)
 
-            # Take our measuremnt
+            # Take our measurement
             sv, sc = self._sweep_smu.measure()
             cv, cc = self._constant_smu.measure()
             t = time.time() - start_time
