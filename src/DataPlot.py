@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import pyqtgraph as pg
 
@@ -16,8 +16,8 @@ class DataPlot(pg.GraphicsLayoutWidget):
     x_param: PlotParam
     y_param: PlotParam
 
-    smu_1_name: str
-    smu_2_name: str
+    smu_1_name: Optional[str]
+    smu_2_name: Optional[str]
 
     datasets: List[Dataset]
 
@@ -25,6 +25,9 @@ class DataPlot(pg.GraphicsLayoutWidget):
         super().__init__(parent=parent)
         self.datasets = []
         self.curves = []
+
+        self.smu_1_name = None
+        self.smu_2_name = None
 
         self.plot_item = self.addPlot(0, 0)
         self.plot_item.getAxis("left").enableAutoSIPrefix(True)
@@ -88,28 +91,49 @@ class DataPlot(pg.GraphicsLayoutWidget):
         self.x_param = x_param
         self.y_param = y_param
 
-        # Determine what unit to show on the graph axis
-        x_unit = "A"
+        # Use the provided SMU names for labels
+        if self.x_param == PlotParam.time:
+            x_label = "Time"
+        if self.x_param in [PlotParam.smu_1_voltage, PlotParam.smu_1_current]:
+            x_label = f"{self.smu_1_name}" if self.smu_1_name else "SMU 1"
+        else:
+            x_label = f"{self.smu_2_name}" if self.smu_2_name else "SMU 2"
 
+        if self.y_param == PlotParam.time:
+            y_label = "Time"
+        if self.y_param in [PlotParam.smu_1_voltage, PlotParam.smu_1_current]:
+            y_label = f"{self.smu_1_name}" if self.smu_1_name else "SMU 1"
+        else:
+            y_label = f"{self.smu_2_name}" if self.smu_2_name else "SMU 2"
+
+        # Determine what unit to show on the graph axis
         if self.x_param == PlotParam.time:
             x_unit = "s"
         elif self.x_param in [PlotParam.smu_1_voltage, PlotParam.smu_2_voltage]:
             x_unit = "V"
-
-        y_unit = "A"
+        else:
+            y_unit = "A"
 
         if self.y_param == PlotParam.time:
             y_unit = "s"
         elif self.y_param in [PlotParam.smu_1_voltage, PlotParam.smu_2_voltage]:
             y_unit = "V"
+        else:
+            y_unit = "A"
 
-        self.plot_item.setLabel(axis="bottom", text=x_param.name, units=x_unit)
-        self.plot_item.setLabel(axis="left", text=y_param.name, units=y_unit)
+        self.plot_item.setLabel(axis="bottom", text=x_label, units=x_unit)
+        self.plot_item.setLabel(axis="left", text=y_label, units=y_unit)
 
         self.refresh_all()
 
+    def update_labels(self, smu_1_name: str, smu_2_name: str):
+        self.smu_1_name = smu_1_name
+        self.smu_2_name = smu_2_name
+
+        self.set_plot_parameters(self.x_param, self.y_param)
+
     def show_plot_params_dialog(self):
-        new_params = PlotParamsDialog(self, self.x_param, self.y_param).get_params()
+        new_params = PlotParamsDialog(self, self.x_param, self.y_param, self.smu_1_name, self.smu_2_name).get_params()
 
         if new_params:
             self.set_plot_parameters(*new_params)

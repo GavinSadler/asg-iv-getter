@@ -82,10 +82,15 @@ class SourceMeter:
         self.reset()
         self.initialize_supply(Source.VOLTAGE, 0.01)
 
-    def get_label(self):
+    def get_label(self, include_serial=True):
 
         if self.name is not None:
-            return f"{self.name} ({self.serial_number})"
+            label = f"{self.name}"
+
+            if include_serial:
+                label += f" ({self.serial_number})"
+
+            return label
 
         return f"SMU - {self.serial_number}"
 
@@ -148,12 +153,12 @@ class SourceMeter:
                 raise serial.SerialException("Invalid response from SMU")
 
             voltage_str, current_str = split_items
-            return (float(voltage_str), float(current_str))
+            return float(voltage_str), float(current_str)
         else:
-            return (random.random(), random.random())
+            return random.random(), random.random()
 
-    def beep(self, frequency: int, time: float):
-        self._send_command(f":SYST:BEEP:IMM {frequency}, {time}".encode())
+    def beep(self, frequency: int, duration: float):
+        self._send_command(f":SYST:BEEP:IMM {frequency}, {duration}".encode())
 
     def display_message(self, message: str):
         self._send_command(f':DISP:TEXT:DATA "{message}"'.encode())

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 from PySide6.QtWidgets import QDialog, QRadioButton
 
@@ -13,6 +13,7 @@ class PlotParam(Enum):
     smu_2_current = "smu_2_current"
     time = "time"
 
+    @staticmethod
     def strings() -> List[str]:
         return [p.name for p in PlotParam]
 
@@ -22,7 +23,7 @@ class PlotParamsDialog(QDialog, Ui_Dialog):
     x_radios: List[QRadioButton]
     y_radios: List[QRadioButton]
 
-    def __init__(self, parent=None, x_selected: PlotParam = PlotParam.smu_1_voltage, y_selected: PlotParam = PlotParam.smu_1_current):
+    def __init__(self, parent=None, x_selected: PlotParam = PlotParam.smu_1_voltage, y_selected: PlotParam = PlotParam.smu_1_current, smu_1_name: Optional[str] = None, smu_2_name: Optional[str] = None):
         QDialog.__init__(self, parent)
         self.setupUi(self)
         self.retranslateUi(self)
@@ -30,21 +31,32 @@ class PlotParamsDialog(QDialog, Ui_Dialog):
         # Initialize fields
         self.x_radios: List[QRadioButton] = []
         self.y_radios: List[QRadioButton] = []
+        self.smu_1_name = smu_1_name
+        self.smu_2_name = smu_2_name
 
-        # Add all of the radio buttons
+        # Add all the radio buttons
         for column in PlotParam.strings():
-            x_radio = QRadioButton(column, self.x_radio_group)
+
+            if self.smu_1_name:
+                label = column.replace("smu_1_", f"{self.smu_1_name} ")
+
+            if self.smu_2_name:
+                label = column.replace("smu_2_", f"{self.smu_2_name} ")
+
+            x_radio = QRadioButton(label, self.x_radio_group)
+            x_radio.param_str = column
             self.x_radios.append(x_radio)
             self.x_radio_group.layout().addWidget(x_radio)
 
-            if x_radio.text() == x_selected.name:
+            if x_radio.param_str == x_selected.name:
                 x_radio.setChecked(True)
 
-            y_radio = QRadioButton(column, self.y_radio_group)
+            y_radio = QRadioButton(label, self.y_radio_group)
+            y_radio.param_str = column
             self.y_radios.append(y_radio)
             self.y_radio_group.layout().addWidget(y_radio)
 
-            if y_radio.text() == y_selected.name:
+            if y_radio.param_str == y_selected.name:
                 y_radio.setChecked(True)
 
         self.adjustSize()

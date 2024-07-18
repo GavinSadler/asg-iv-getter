@@ -24,99 +24,8 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="tab_connect">
-       <attribute name="title">
-        <string>Sourcemeter Connections</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QGroupBox" name="smu_connections">
-          <property name="title">
-           <string>Connections</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QListWidget" name="smu_connection_list"/>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QPushButton" name="smu_disconnect">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Disconnect</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Orientation::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="smu_identify">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>Identify</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_4">
-          <property name="title">
-           <string>Connect to Sourcemeters</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
-           <item>
-            <widget class="QPlainTextEdit" name="smu_search_log">
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-             <property name="centerOnScroll">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QProgressBar" name="smu_search_progress"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="smu_search">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="text">
-              <string>Search for SMUs</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab_sweep_measurement">
        <attribute name="title">
         <string>Sweep Measurement</string>
@@ -134,41 +43,22 @@
            <string>Metadata</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_12">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_13">
              <property name="text">
-              <string>Step of Process:</string>
+              <string>Chip #:</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1" colspan="4">
-            <widget class="QPlainTextEdit" name="sm_meta_comments">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>80</height>
-              </size>
-             </property>
-             <property name="placeholderText">
-              <string>Enter comments here...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_11">
+           <item row="1" column="4">
+            <widget class="QRadioButton" name="sm_meta_light">
              <property name="text">
-              <string>Waver #:</string>
+              <string>Light</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="sm_meta_wafer">
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="sm_meta_step">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -184,44 +74,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="4">
-            <widget class="QRadioButton" name="sm_meta_light">
-             <property name="text">
-              <string>Light</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QRadioButton" name="sm_meta_dark">
-             <property name="text">
-              <string>Dark</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>Chip #:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_15">
-             <property name="text">
-              <string>Comments:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="sm_meta_step">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="3" colspan="2">
             <widget class="QLineEdit" name="sm_meta_chip">
              <property name="sizePolicy">
@@ -232,80 +84,81 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_8">
-          <property name="minimumSize">
-           <size>
-            <width>425</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Data</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_9">
-           <item row="1" column="1">
-            <widget class="QPushButton" name="sm_abort">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
+           <item row="1" column="3">
+            <widget class="QRadioButton" name="sm_meta_dark">
              <property name="text">
-              <string>Abort Measurement</string>
+              <string>Dark</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="sm_file_output">
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_15">
              <property name="text">
-              <string>File Output</string>
+              <string>Comments:</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="sm_save_last_run">
-             <property name="enabled">
-              <bool>false</bool>
+           <item row="3" column="1" colspan="4">
+            <widget class="QPlainTextEdit" name="sm_meta_comments">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Save Last Run</string>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>50</height>
+              </size>
              </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="sm_left_plot_settings">
-             <property name="text">
-              <string>Left Plot Settings</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0" colspan="2">
-            <widget class="QProgressBar" name="sm_progress">
-             <property name="value">
-              <number>0</number>
-             </property>
-             <property name="textVisible">
-              <bool>false</bool>
+             <property name="placeholderText">
+              <string>Enter comments here...</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLabel" name="sm_file_output_path">
-             <property name="text">
-              <string>No data save location specified</string>
+            <widget class="QLineEdit" name="sm_meta_wafer">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="sm_right_plot_settings">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_11">
              <property name="text">
-              <string>Left Plot Settings</string>
+              <string>Wafer #:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>Step of Process:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QCheckBox" name="sm_meta_time_data">
+             <property name="text">
+              <string>Include time data?</string>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="DataPlot" name="sm_plot_1" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -358,13 +211,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -377,13 +230,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -412,13 +265,13 @@
               <string> V</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="minimum">
-              <double>-1000.000000000000000</double>
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
@@ -475,10 +328,10 @@
            <item row="4" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="sm_param_sweep_compliance">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>9</number>
              </property>
              <property name="maximum">
               <double>1000.000000000000000</double>
@@ -494,8 +347,8 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QGroupBox" name="groupBox_2">
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="groupBox_8">
           <property name="minimumSize">
            <size>
             <width>425</width>
@@ -503,102 +356,196 @@
            </size>
           </property>
           <property name="title">
-           <string>Constant Parameters</string>
+           <string>Data</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="2">
-            <widget class="QRadioButton" name="sm_param_constant_current">
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="3" column="0">
+            <widget class="QPushButton" name="sm_left_plot_settings">
              <property name="text">
-              <string>Current</string>
+              <string>Left Plot Settings</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="sm_abort">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Abort Measurement</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="sm_file_output_path">
+             <property name="text">
+              <string>No data save location specified</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QProgressBar" name="sm_progress">
+             <property name="value">
+              <number>0</number>
+             </property>
+             <property name="textVisible">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_8">
+            <widget class="QPushButton" name="sm_file_output">
              <property name="text">
-              <string>Sourcemeter (smu_2):</string>
+              <string>File Output</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_9">
+           <item row="2" column="0">
+            <widget class="QPushButton" name="sm_save_last_run">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
-              <string>Compliance:</string>
+              <string>Save Last Run</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QRadioButton" name="sm_param_constant_voltage">
+           <item row="3" column="1">
+            <widget class="QPushButton" name="sm_right_plot_settings">
              <property name="text">
-              <string>Voltage</string>
+              <string>Right Plot Settings</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="minimumSize">
+           <size>
+            <width>425</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Full Measurement</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="3" column="1">
+            <widget class="QRadioButton" name="sm_param_repeat_sweep">
+             <property name="text">
+              <string>Repeat Sweep</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="0" column="1" colspan="2">
-            <widget class="QComboBox" name="sm_constant_smu_select">
-             <item>
-              <property name="text">
-               <string>Simulated</string>
-              </property>
-             </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>Multiple Test Order:</string>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_10">
+            <widget class="QLabel" name="label_26">
              <property name="text">
-              <string>Mode:</string>
+              <string>Pause Between Measurements:</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1" colspan="2">
-            <widget class="QDoubleSpinBox" name="sm_param_constant_compliance">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_25">
+             <property name="text">
+              <string>Pause Between Sweeps:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Number of Tests:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QRadioButton" name="sm_param_sweep_then_step">
+             <property name="text">
+              <string>Sweep and Step</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QDoubleSpinBox" name="sm_param_pause_between_sweeps">
              <property name="suffix">
-              <string> A</string>
+              <string> sec</string>
              </property>
              <property name="decimals">
-              <number>6</number>
+              <number>3</number>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>100.000000000000000</double>
+             </property>
+             <property name="stepType">
+              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1" colspan="2">
+            <widget class="QDoubleSpinBox" name="sm_param_pause_between_measurements">
+             <property name="suffix">
+              <string> sec</string>
+             </property>
+             <property name="decimals">
+              <number>3</number>
+             </property>
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="stepType">
+              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QSpinBox" name="sm_param_number_of_tests">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
              </property>
              <property name="value">
-              <double>0.000000000000000</double>
+              <number>1</number>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_16">
+           <item row="4" column="0" colspan="3">
+            <widget class="QPushButton" name="sm_run_full_measurement">
              <property name="text">
-              <string>Output:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1" colspan="2">
-            <widget class="QDoubleSpinBox" name="sm_param_constant_output">
-             <property name="suffix">
-              <string> V</string>
-             </property>
-             <property name="decimals">
-              <number>6</number>
-             </property>
-             <property name="minimum">
-              <double>-1000.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>1000.000000000000000</double>
-             </property>
-             <property name="stepType">
-              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+              <string>Run Full Measurement</string>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="DataPlot" name="sm_plot_2" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -672,8 +619,8 @@
           </layout>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QGroupBox" name="groupBox_6">
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox_2">
           <property name="minimumSize">
            <size>
             <width>425</width>
@@ -681,103 +628,181 @@
            </size>
           </property>
           <property name="title">
-           <string>Full Measurement</string>
+           <string>Constant Step Parameters</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6">
-           <item row="3" column="0" colspan="2">
-            <widget class="QPushButton" name="sm_run_full_measurement">
-             <property name="text">
-              <string>Run Full Measurement</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_22">
-             <property name="text">
-              <string>Number of Sweeps:</string>
-             </property>
-            </widget>
-           </item>
+          <layout class="QGridLayout" name="gridLayout_2">
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="sm_param_pause_between_measurements">
+            <widget class="QRadioButton" name="sm_param_constant_voltage">
+             <property name="text">
+              <string>Voltage</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QDoubleSpinBox" name="sm_param_constant_start">
              <property name="suffix">
-              <string> sec</string>
+              <string> V</string>
              </property>
              <property name="decimals">
-              <number>3</number>
+              <number>9</number>
+             </property>
+             <property name="minimum">
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>100.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_25">
-             <property name="text">
-              <string>Pause Between Sweeps:</string>
-             </property>
+           <item row="0" column="1" colspan="2">
+            <widget class="QComboBox" name="sm_constant_smu_select">
+             <item>
+              <property name="text">
+               <string>Simulated</string>
+              </property>
+             </item>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="sm_param_number_of_sweeps">
+           <item row="4" column="1" colspan="2">
+            <widget class="QDoubleSpinBox" name="sm_param_constant_compliance">
+             <property name="suffix">
+              <string> mA</string>
+             </property>
+             <property name="decimals">
+              <number>9</number>
+             </property>
              <property name="maximum">
-              <number>100</number>
+              <double>1000.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
              </property>
              <property name="value">
-              <number>1</number>
+              <double>0.000000000000000</double>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="sm_param_pause_between_sweeps">
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Compliance:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Sourcemeter (smu_2):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Mode:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QRadioButton" name="sm_param_constant_current">
+             <property name="text">
+              <string>Current</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Start</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="sm_param_constant_step">
              <property name="suffix">
-              <string> sec</string>
+              <string> V</string>
              </property>
              <property name="decimals">
-              <number>3</number>
+              <number>9</number>
+             </property>
+             <property name="minimum">
+              <double>-1100.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>100.000000000000000</double>
+              <double>1100.000000000000000</double>
              </property>
              <property name="stepType">
               <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_26">
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_7">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>Pause Between Measurements:</string>
+              <string>Step</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QDoubleSpinBox" name="sm_param_constant_end">
+             <property name="suffix">
+              <string> V</string>
+             </property>
+             <property name="decimals">
+              <number>9</number>
+             </property>
+             <property name="minimum">
+              <double>-1100.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>1100.000000000000000</double>
+             </property>
+             <property name="stepType">
+              <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_16">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>End</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
              </property>
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="DataPlot" name="sm_plot_1" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>1</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="DataPlot" name="sm_plot_2" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>1</verstretch>
-           </sizepolicy>
-          </property>
          </widget>
         </item>
        </layout>
@@ -799,10 +824,20 @@
            <string>Metadata</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_30">
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="ds_meta_step">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QRadioButton" name="ds_meta_light">
              <property name="text">
-              <string>Step of Process:</string>
+              <string>Light</string>
              </property>
             </widget>
            </item>
@@ -817,7 +852,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>80</height>
+               <height>50</height>
               </size>
              </property>
              <property name="placeholderText">
@@ -825,15 +860,15 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_31">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_34">
              <property name="text">
-              <string>Waver #:</string>
+              <string>Comments:</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="ds_meta_wafer">
+           <item row="0" column="3" colspan="2">
+            <widget class="QLineEdit" name="ds_meta_chip">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -849,10 +884,13 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="4">
-            <widget class="QRadioButton" name="ds_meta_light">
-             <property name="text">
-              <string>Light</string>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="ds_meta_wafer">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
             </widget>
            </item>
@@ -863,6 +901,20 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_31">
+             <property name="text">
+              <string>Wafer #:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_30">
+             <property name="text">
+              <string>Step of Process:</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="2">
             <widget class="QLabel" name="label_33">
              <property name="text">
@@ -870,30 +922,10 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_34">
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="ds_meta_time_data">
              <property name="text">
-              <string>Comments:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="ds_meta_step">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3" colspan="2">
-            <widget class="QLineEdit" name="ds_meta_chip">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+              <string>Include time data?</string>
              </property>
             </widget>
            </item>
@@ -962,7 +994,7 @@
            <item row="3" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="ds_param_compliance_1">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
               <number>6</number>
@@ -1214,7 +1246,7 @@
            <item row="3" column="1" colspan="2">
             <widget class="QDoubleSpinBox" name="ds_param_compliance_2">
              <property name="suffix">
-              <string> A</string>
+              <string> mA</string>
              </property>
              <property name="decimals">
               <number>6</number>
@@ -1354,43 +1386,12 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_data">
+      <widget class="QWidget" name="tab_data_view">
        <attribute name="title">
         <string>Data</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0" colspan="2">
-         <widget class="DataPlot" name="data_plot" native="true"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QGroupBox" name="groupBox_9">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>Sweep Measurements</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QListWidget" name="sweep_measurements">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>200</height>
-              </size>
-             </property>
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="2" column="1">
+        <item row="3" column="4" colspan="2">
          <widget class="QGroupBox" name="groupBox_10">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -1418,12 +1419,69 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="0" colspan="2">
+        <item row="2" column="2">
+         <widget class="QLabel" name="label_19">
+          <property name="text">
+           <string>SMU 1 Label:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="5">
+         <widget class="QComboBox" name="data_smu_select_2"/>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="label_20">
+          <property name="text">
+           <string>SMU 2 Label:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QComboBox" name="data_smu_select_1"/>
+        </item>
+        <item row="3" column="2" colspan="2">
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Sweep Measurements</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QListWidget" name="sweep_measurements">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>200</height>
+              </size>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2" colspan="4">
          <widget class="QPushButton" name="plot_parameters">
           <property name="text">
            <string>Plot Parameters</string>
           </property>
          </widget>
+        </item>
+        <item row="0" column="2" colspan="4">
+         <widget class="DataPlot" name="data_plot" native="true"/>
         </item>
        </layout>
       </widget>
@@ -1471,7 +1529,7 @@
   <customwidget>
    <class>DataPlot</class>
    <extends>QWidget</extends>
-   <header>DataPlot</header>
+   <header>src.DataPlot</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -1492,11 +1550,10 @@
   <tabstop>sm_constant_smu_select</tabstop>
   <tabstop>sm_param_constant_voltage</tabstop>
   <tabstop>sm_param_constant_current</tabstop>
-  <tabstop>sm_param_constant_output</tabstop>
   <tabstop>sm_param_constant_compliance</tabstop>
   <tabstop>sm_param_quick_pause_between_measurements</tabstop>
   <tabstop>sm_param_quick_sweep_step_override</tabstop>
-  <tabstop>sm_param_number_of_sweeps</tabstop>
+  <tabstop>sm_param_number_of_tests</tabstop>
   <tabstop>sm_param_pause_between_measurements</tabstop>
   <tabstop>sm_param_pause_between_sweeps</tabstop>
   <tabstop>sm_run_quick_measurement</tabstop>
@@ -1533,12 +1590,7 @@
   <tabstop>ds_stream</tabstop>
   <tabstop>ds_left_plot_settings</tabstop>
   <tabstop>ds_right_plot_settings</tabstop>
-  <tabstop>smu_identify</tabstop>
-  <tabstop>smu_connection_list</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>smu_disconnect</tabstop>
-  <tabstop>smu_search</tabstop>
-  <tabstop>smu_search_log</tabstop>
  </tabstops>
  <resources/>
  <connections/>
