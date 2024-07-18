@@ -375,9 +375,7 @@ class Controller(QtCore.QObject):
             # Write if no file exists, otherwise append to the existing file
             write_mode = "w" if not os.path.exists(self.sm_data_file_path) else "a"
 
-            with pd.ExcelWriter(
-                self.sm_data_file_path, mode=write_mode, if_sheet_exists=("overlay" if write_mode == "a" else None)
-            ) as writer:
+            with pd.ExcelWriter(self.sm_data_file_path, mode=write_mode, if_sheet_exists=("overlay" if write_mode == "a" else None)) as writer:
                 for run in self.sm_last_run:
                     # Update the metadata - its possible that the user updated the data
                     run.metadata.update(self.main_window.get_sm_metadata())
@@ -578,6 +576,7 @@ class Controller(QtCore.QObject):
         self.main_window.ds_plot_2.update_labels(ds1, ds2)
         self.main_window.data_plot.update_labels(data_1, data_2)
         self.main_window.data_plot.update_labels(data_1, data_2)
+
 
 if __name__ == "__main__":
     import sys
