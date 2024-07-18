@@ -570,12 +570,12 @@ class Controller(QtCore.QObject):
         data_1 = self.get_smu_from_label(self.main_window.data_smu_select_1.currentText()).get_label(include_serial=False)
         data_2 = self.get_smu_from_label(self.main_window.data_smu_select_2.currentText()).get_label(include_serial=False)
 
-        self.main_window.sm_plot_1.update_labels(sweep, constant)
-        self.main_window.sm_plot_2.update_labels(sweep, constant)
-        self.main_window.ds_plot_1.update_labels(ds1, ds2)
-        self.main_window.ds_plot_2.update_labels(ds1, ds2)
-        self.main_window.data_plot.update_labels(data_1, data_2)
-        self.main_window.data_plot.update_labels(data_1, data_2)
+        self.main_window.sm_plot_1.set_labels(sweep, constant)
+        self.main_window.sm_plot_2.set_labels(sweep, constant)
+        self.main_window.ds_plot_1.set_labels(ds1, ds2)
+        self.main_window.ds_plot_2.set_labels(ds1, ds2)
+        self.main_window.data_plot.set_labels(data_1, data_2)
+        self.main_window.data_plot.set_labels(data_1, data_2)
 
 
 if __name__ == "__main__":

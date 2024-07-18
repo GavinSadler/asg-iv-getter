@@ -40,20 +40,26 @@ class PlotParamsDialog(QDialog, Ui_Dialog):
         # Add all the radio buttons
         for p in PlotParam:
 
-            label = p.name.replace("smu_1_", f"{self.smu_1_name} ").replace("smu_2_", f"{self.smu_2_name} ")
+            label = (
+                p.name.replace("smu_1_", f"{self.smu_1_name} ")
+                .replace("smu_2_", f"{self.smu_2_name} ")
+                .replace("voltage", "Voltage")
+                .replace("current", "Current")
+                .replace("time", "Time")
+            )
 
             x_radio = QRadioButton(label, self.x_radio_group)
             self.x_radios[x_radio] = p
             self.x_radio_group.layout().addWidget(x_radio)
 
-            if self.x_radios[x_radio] == x_selected:
+            if self.x_radios.get(x_radio) == x_selected:
                 x_radio.setChecked(True)
 
             y_radio = QRadioButton(label, self.y_radio_group)
             self.x_radios[y_radio] = p
             self.y_radio_group.layout().addWidget(y_radio)
 
-            if self.y_radios[y_radio] == y_selected:
+            if self.y_radios.get(y_radio) == y_selected:
                 y_radio.setChecked(True)
 
         self.adjustSize()

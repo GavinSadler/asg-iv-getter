@@ -78,13 +78,8 @@ class DataPlot(pg.GraphicsLayoutWidget):
 
         self.curves[-1].setData(x_data, y_data)
 
-    def reset(self):
-        self.datasets.clear()
-        self.curves.clear()
 
-        self.refresh_all()
-
-    def update_labels(self):
+    def refresh_labels(self):
 
         # Use the provided SMU names for labels
         if self.x_param == PlotParam.time:
@@ -123,18 +118,24 @@ class DataPlot(pg.GraphicsLayoutWidget):
         self.plot_item.setLabel(axis="bottom", text=x_label, units=x_unit)
         self.plot_item.setLabel(axis="left", text=y_label, units=y_unit)
 
+
+    def reset(self):
+        self.datasets.clear()
+        self.curves.clear()
+
+        self.refresh_all()
     def set_plot_parameters(self, x_param: PlotParam, y_param: PlotParam):
         self.x_param = x_param
         self.y_param = y_param
 
         self.refresh_all()
-        self.update_labels()
+        self.refresh_labels()
 
-    def update_labels(self, smu_1_name: str, smu_2_name: str):
+    def set_labels(self, smu_1_name: str, smu_2_name: str):
         self.smu_1_name = smu_1_name
         self.smu_2_name = smu_2_name
 
-        self.update_labels()
+        self.refresh_labels()
 
     def show_plot_params_dialog(self):
         new_params = PlotParamsDialog(self, self.x_param, self.y_param, self.smu_1_name, self.smu_2_name).get_params()
