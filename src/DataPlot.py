@@ -78,7 +78,6 @@ class DataPlot(pg.GraphicsLayoutWidget):
 
         self.curves[-1].setData(x_data, y_data)
 
-
     def refresh_labels(self):
 
         # Use the provided SMU names for labels
@@ -118,12 +117,12 @@ class DataPlot(pg.GraphicsLayoutWidget):
         self.plot_item.setLabel(axis="bottom", text=x_label, units=x_unit)
         self.plot_item.setLabel(axis="left", text=y_label, units=y_unit)
 
-
     def reset(self):
         self.datasets.clear()
         self.curves.clear()
 
         self.refresh_all()
+
     def set_plot_parameters(self, x_param: PlotParam, y_param: PlotParam):
         self.x_param = x_param
         self.y_param = y_param
