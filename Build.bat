@@ -1,0 +1,1 @@
+.qtcreator\Python_3_12_64_bit_venv\Scripts\pyinstaller.exe Controller.py --name "iv-getter" --noconfirm
