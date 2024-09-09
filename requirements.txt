@@ -1,0 +1,6 @@
+PySide6
+pandas
+pyqtgraph
+openpyxl
+pyserial
+pyinstaller

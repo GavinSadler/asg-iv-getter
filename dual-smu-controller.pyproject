@@ -1,0 +1,29 @@
+{
+    "files": [
+        "Controller.py",
+        "Data.py",
+        "DataPlot.py",
+        "Measurement.py",
+        "PlotParamsDialog.py",
+        "SMUNameDialog.py",
+        "SMUSeachDialog.py",
+        "SourceMeter.py",
+        "main_window.ui",
+        "MainWindow.py",
+        "plot_params_dialog.ui",
+        "smu_name_dialog.ui",
+        "smu_search_dialog.ui",
+        "MainWindowSimple.py",
+        "ui_main_window.py",
+        "ui_plot_params_dialog.py",
+        "ui_smu_name_dialog.py",
+        "ui_smu_search_dialog.py",
+        "main_window_simple.ui",
+        "requirements.txt",
+        "main_window.ui",
+        "main_window_simple.ui",
+        "plot_params_dialog.ui",
+        "smu_name_dialog.ui",
+        "smu_search_dialog.ui"
+    ]
+}
